@@ -8,7 +8,14 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
- * Created by U on 16.07.2016.
+ * Singleton class {@code DAOFactory} creates and encapsulates all DAO objects
+ * All DAO objects are also singletons
+ *
+ * @author Anton Mishkyroff
+ * @see BrandsDAO
+ * @see UsersDAO
+ * @see OrdersDAO
+ * @see CarsDAO
  */
 public class DAOFactory {
 
@@ -28,7 +35,7 @@ public class DAOFactory {
             InitialContext initialContext = new InitialContext();
             ds = (DataSource) initialContext.lookup("java:comp/env/jdbc/carget");
         } catch (NamingException e) {
-            LOGGER.error("Error during datasource initialization " + e.getMessage());
+            LOGGER.error("Error during DataSource initialization " + e.getMessage());
         }
     }
 

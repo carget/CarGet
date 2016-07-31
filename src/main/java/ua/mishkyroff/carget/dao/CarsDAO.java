@@ -9,12 +9,15 @@ import ua.mishkyroff.carget.entities.Model;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
- * Created by U on 26.07.2016.
+ * Class {@code CarsDAO} used for CRUD and other useful DB operations with Car entity
+ *
+ * @author Anton Mishkyroff
  */
 public class CarsDAO {
     private final DataSource ds;

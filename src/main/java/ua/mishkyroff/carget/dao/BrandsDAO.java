@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- * Created by U on 28.07.2016.
+ * Class {@code BrandsDAO} used for CRUD and other useful DB operations with Brand entity
+ *
+ * @author Anton Mishkyroff
  */
 public class BrandsDAO {
     private final DataSource ds;

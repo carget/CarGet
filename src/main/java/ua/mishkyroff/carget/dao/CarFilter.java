@@ -12,7 +12,10 @@ import static ua.mishkyroff.carget.commands.Command.ERROR_END_DATE_MUST_BE_GT_ST
 import static ua.mishkyroff.carget.commands.Command.ERROR_START_DATE_MUST_BE_GE_TODAY;
 
 /**
- * Created by U on 28.07.2016.
+ * Class {@code CarFilter} used to store and validate filter's parameters
+ *
+ * @author Anton Mishkyroff
+ * @see CarsDAO#filterAndGetCars(CarFilter)
  */
 public class CarFilter {
     private List<Brand> brands;
@@ -28,6 +31,9 @@ public class CarFilter {
     private String error;
     private boolean haveUnreadedError;
 
+    /**
+     * Create default parameters for car filtration
+     */
     public CarFilter() {
         //default filtering params
         this.brands = DAOFactory.getInstance().getBrandsDAO().getAllBrands();
@@ -112,6 +118,12 @@ public class CarFilter {
         return selectedStartDate;
     }
 
+    /**
+     * Validates passed date and set error message if there are some problems with end date value
+     * If end date is wrong then corrects it
+     *
+     * @param startDateString - date to check, correct and store
+     */
     public void setSelectedStartDate(String startDateString) {
         // IF start date >= today THEN set Error and set 'today' as correct start date
         if (startDateString != null) {
@@ -133,6 +145,12 @@ public class CarFilter {
         return selectedEndDate;
     }
 
+    /**
+     * Validates passed date and set error message if there are some problems with end date value
+     * If end date is wrong then corrects it
+     *
+     * @param endDateString - date to check, correct and store
+     */
     public void setSelectedEndDate(String endDateString) {
         // IF end date <= start date THEN set Error and correct date
         if (endDateString != null) {
@@ -154,6 +172,10 @@ public class CarFilter {
         return fuelTypes;
     }
 
+    /**
+     * Gets error message and reset error flag
+     * @return - error message
+     */
     public String getError() {
         haveUnreadedError = false;
         return error;
@@ -163,6 +185,12 @@ public class CarFilter {
         this.error = error;
     }
 
+    /**
+     * The method returns error flag. The flag will be reset after getError() method call
+     *
+     * @return - flag is true if unreaded error exist
+     * @see #getError()
+     */
     public boolean haveUnreadedError() {
         return haveUnreadedError;
     }

@@ -1,6 +1,7 @@
 package ua.mishkyroff.carget.dao;
 
-import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.entities.User;
 import ua.mishkyroff.carget.entities.UserRole;
 
@@ -12,7 +13,9 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
- * Created by U on 16.07.2016.
+ * Class {@code UsersDAO} used for CRUD and other useful DB operations with User entity
+ *
+ * @author Anton Mishkyroff
  */
 public class UsersDAO {
     private DataSource ds;

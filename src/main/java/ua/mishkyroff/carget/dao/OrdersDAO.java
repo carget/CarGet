@@ -5,13 +5,20 @@ import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.entities.*;
 
 import javax.sql.DataSource;
-import java.sql.*;
-import java.util.Date;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
- * Created by U on 26.07.2016.
+ * Class {@code OrdersDAO} used for CRUD and other useful DB operations with Order entity
+ *
+ * @author Anton Mishkyroff
  */
 public class OrdersDAO {
     private final static ResourceBundle BUNDLE = ResourceBundle.getBundle("sql_statements");
@@ -132,11 +139,7 @@ public class OrdersDAO {
              PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("SET_ORDER_STATUS_BY_ID"))) {
             statement.setString(1, status.toString().toLowerCase());
             statement.setInt(2, orderId);
-            if (statement.executeUpdate() > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             LOGGER.error("Error by updating order by id");
             return false;
@@ -150,11 +153,7 @@ public class OrdersDAO {
             statement.setString(1, status.toString().toLowerCase());
             statement.setString(2, comment);
             statement.setInt(3, orderId);
-            if (statement.executeUpdate() > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             LOGGER.error("Error by updating order by id");
             return false;
@@ -171,11 +170,7 @@ public class OrdersDAO {
             statement.setDouble(3, fine);
             statement.setString(4, orderId.toString());
             LOGGER.debug(" complete order SQL=" + statement);
-            if (statement.executeUpdate() > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             LOGGER.error("Error by updating order by id");
             return false;
