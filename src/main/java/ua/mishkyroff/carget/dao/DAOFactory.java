@@ -1,0 +1,72 @@
+package ua.mishkyroff.carget.dao;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
+/**
+ * Created by U on 16.07.2016.
+ */
+public class DAOFactory {
+
+    private static final Logger LOGGER = LogManager.getLogger("toConsole");
+
+    private static final DAOFactory instance = new DAOFactory();
+    private DataSource ds;
+
+    private DBInitializationDAO instanceDBInitializationDAO;
+    private UsersDAO instanceUsersDAO;
+    private CarsDAO instanceCarsDAO;
+    private OrdersDAO instanceOrdersDAO;
+    private BrandsDAO instanceBrandsDAO;
+
+    private DAOFactory() {
+        try {
+            InitialContext initialContext = new InitialContext();
+            ds = (DataSource) initialContext.lookup("java:comp/env/jdbc/carget");
+        } catch (NamingException e) {
+            LOGGER.error("Error during datasource initialization " + e.getMessage());
+        }
+    }
+
+    public static DAOFactory getInstance() {
+        return instance;
+    }
+
+    public synchronized UsersDAO getUsersDAO() {
+        if (instanceUsersDAO == null) {
+            instanceUsersDAO = new UsersDAO(ds);
+        }
+        return instanceUsersDAO;
+    }
+
+    public synchronized CarsDAO getCarsDAO() {
+        if (instanceCarsDAO == null) {
+            instanceCarsDAO = new CarsDAO(ds);
+        }
+        return instanceCarsDAO;
+    }
+
+    public synchronized OrdersDAO getOrdersDAO() {
+        if (instanceOrdersDAO == null) {
+            instanceOrdersDAO = new OrdersDAO(ds);
+        }
+        return instanceOrdersDAO;
+    }
+
+    public synchronized BrandsDAO getBrandsDAO() {
+        if (instanceBrandsDAO == null) {
+            instanceBrandsDAO = new BrandsDAO(ds);
+        }
+        return instanceBrandsDAO;
+    }
+    public synchronized DBInitializationDAO getInitDBDAO() {
+        if (instanceDBInitializationDAO == null) {
+            instanceDBInitializationDAO = new DBInitializationDAO(ds);
+        }
+        return instanceDBInitializationDAO;
+    }
+}

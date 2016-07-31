@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>csrfTokenLib</short-name>
+    <uri>csrftags</uri>
+
+    <!-- Invoke 'Generate' action to add tags or functions -->
+    <tag>
+        <name>csrfTag</name>
+        <tag-class>ua.mishkyroff.carget.tags.CSRFHandler</tag-class>
+        <!--for empty body-->
+        <body-content>empty</body-content>
+        <!--for jsp body-->
+        <!--<body-content>JSP</body-content>-->
+        <!--for non jsp body-->
+        <!--<body-content>tagdependent</body-content>-->
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+
+    </tag>
+
+</taglib>
