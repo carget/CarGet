@@ -11,14 +11,7 @@ public enum SessionAttributes {
     USER_ID("user_id"),
     USER_NAME("user_name"),
     USER_ROLE("user_role"),
-    MESSAGE("error"),
-    CAR("car"),
-    CAR_FILTER("car_filter"),
-    CARS("cars"),
-    ORDERS("orders"),
-    ORDER("order"),
-    START_DATE("start_date"),
-    END_DATE("end_date");
+    MESSAGE("error");
 
     private String name;
 

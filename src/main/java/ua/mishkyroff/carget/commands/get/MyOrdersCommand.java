@@ -2,6 +2,8 @@ package ua.mishkyroff.carget.commands.get;
 
 import ua.mishkyroff.carget.commands.Command;
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
+import ua.mishkyroff.carget.controllers.JspPages;
+import ua.mishkyroff.carget.controllers.RequestAttributes;
 import ua.mishkyroff.carget.controllers.SessionAttributes;
 import ua.mishkyroff.carget.dao.DAOFactory;
 
@@ -12,11 +14,12 @@ import ua.mishkyroff.carget.dao.DAOFactory;
  *
  * @author Anton Mishkyroff
  */
-public class MyOrdersCommand implements Command{
+public class MyOrdersCommand implements Command {
     @Override
-    public String execute(IRequestWrapper wrapper)  {
-        wrapper.setSessionAttribute(SessionAttributes.ORDERS, DAOFactory.getInstance().getOrdersDAO()
-                .getAllOrdersByUserId((Integer) wrapper.getSessionAttribute(SessionAttributes.USER_ID)));
-        return MY_ORDERS;
+    public JspPages execute(IRequestWrapper wrapper) {
+        wrapper.setRequestAttribute(RequestAttributes.ORDERS, DAOFactory.getInstance()
+                .getOrdersDAO().getAllOrdersByUserId
+                        ((Integer) wrapper.getSessionAttribute(SessionAttributes.USER_ID)));
+        return JspPages.USER_MY_ORDERS;
     }
 }

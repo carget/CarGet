@@ -1,7 +1,10 @@
 package ua.mishkyroff.carget.entities;
 
 /**
- * Created by U on 26.07.2016.
+ * A Brand entity stores information about car's brand
+ * The entity has its representation in the database
+ *
+ * @author Anton Mishkyroff
  */
 public class Brand {
     private Integer idBrand;

@@ -1,18 +1,18 @@
-<table>
+<table class="table">
     <th><fmt:message key="ORDER_ID" bundle="${lang}"/></th>
     <th><fmt:message key="CAR" bundle="${lang}"/></th>
     <th><fmt:message key="FIRST_NAME" bundle="${lang}"/></th>
     <th><fmt:message key="LAST_NAME" bundle="${lang}"/></th>
     <th><fmt:message key="START_DATE" bundle="${lang}"/></th>
     <th><fmt:message key="END_DATE" bundle="${lang}"/></th>
-    <th><fmt:message key="COMMENT" bundle="${lang}"/></th>
+    <%--<th><fmt:message key="COMMENT" bundle="${lang}"/></th>--%>
     <th><fmt:message key="RENT" bundle="${lang}"/></th>
     <th><fmt:message key="FINE" bundle="${lang}"/></th>
     <th><fmt:message key="STATUS" bundle="${lang}"/></th>
     <th><fmt:message key="APPROVE" bundle="${lang}"/></th>
     <th><fmt:message key="REASON" bundle="${lang}"/></th>
     <th><fmt:message key="ACTION" bundle="${lang}"/></th>
-    <c:forEach var="order" items="${sessionScope.orders}">
+    <c:forEach var="order" items="${requestScope.orders}">
         <tr>
             <td>${order.idOrder}</td>
             <td>
@@ -24,16 +24,19 @@
             <td>${order.user.lastName}</td>
             <td>${order.startDate}</td>
             <td>${order.endDate}</td>
-            <td>${order.comment}</td>
+                <%--<td>${order.comment}</td>--%>
             <td>${order.rent}</td>
             <td>${order.fine}</td>
             <td><fmt:message key="${order.status}" bundle="${lang}"/></td>
-            <td >
+            <td>
                 <form action="${pageContext.request.contextPath}/pages/admin_approve_order"
                       method="post">
                     <input type="hidden" name="order_id" value="${order.idOrder}"/>
                     <mytag:csrfTag name="token"/>
-                    <input type="submit" name="command" value="<fmt:message key="APPROVE" bundle="${lang}"/>"/>
+                    <button type="submit" class="btn btn-primary">
+                        <fmt:message key="APPROVE" bundle="${lang}"/>
+                    </button>
+                        <%--<input type="submit" name="command" value="<fmt:message key="APPROVE" bundle="${lang}"/>"/>--%>
                 </form>
             </td>
             <td colspan="2">
@@ -41,8 +44,13 @@
                       method="post">
                     <input type="hidden" name="order_id" value="${order.idOrder}"/>
                     <mytag:csrfTag name="token"/>
-                    <input type="text" name="reason" value="" required/>
-                    <input type="submit" name="command" value="<fmt:message key="REJECT" bundle="${lang}"/>"/>
+                    <div class="form-group">
+                        <input type="text" name="reason" class="form-control" value="" required/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <fmt:message key="REJECT" bundle="${lang}"/>
+                    </button>
+                        <%--<input type="submit" name="command" value="<fmt:message key="REJECT" bundle="${lang}"/>"/>--%>
                 </form>
             </td>
         </tr>

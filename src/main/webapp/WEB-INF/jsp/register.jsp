@@ -1,30 +1,40 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: U
-  Date: 21.07.2016
-  Time: 20:25
-  To change this template use File | Settings | File Templates.
---%>
-<%@include file="/WEB-INF/jsp/layout/header.jsp" %>
-<html>
-<head>
-    <title><fmt:message key="REGISTRATION" bundle="${lang}"/></title>
-</head>
-<body>
-<%--MENU--%>
-<%@include file="/WEB-INF/jsp/layout/menu/menu.jsp" %>
+<%@include file="/WEB-INF/jsp/layout/header.jspf" %>
+<h4 align="center"><fmt:message key="REGISTRATION_GREETING" bundle="${lang}"/></h4>
 <form name="registration" action="${pageContext.request.contextPath}/pages/guest_registration"
       method="post">
     <mytag:csrfTag name="token"/>
-    <fmt:message key="FIRST_NAME" bundle="${lang}"/><br/> <input type="text" name="firstName" required/><br>
-    <fmt:message key="LAST_NAME" bundle="${lang}"/><br/><input type="text" name="lastName" required/><br>
-    <fmt:message key="PASSPORT_FORMAT" bundle="${lang}"/><br/><input type="text" name="passport" required/><br>
-    <fmt:message key="EMAIL" bundle="${lang}"/><br/><input type="text" name="email"
-                                                           pattern="^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$" required/><br>
-    <fmt:message key="PASSWORD" bundle="${lang}"/><br/><input type="text" name="password" required/><br>
-    <fmt:message key="REPEAT_PASSWORD" bundle="${lang}"/><br/><input type="text" name="password_repeat"/>
-    <input type="submit" name="command" value="OK"/>
+    <div class="form-group">
+        <label for="firstName"><fmt:message key="FIRST_NAME" bundle="${lang}"/></label>
+        <input type="text" name="firstName" class="form-control" id="firstName" required
+               placeholder="<fmt:message key="FIRST_NAME" bundle="${lang}"/>">
+    </div>
+    <div class="form-group">
+        <label for="lastName"><fmt:message key="LAST_NAME" bundle="${lang}"/></label>
+        <input type="text" name="lastName" class="form-control" id="lastName" required
+               placeholder="<fmt:message key="LAST_NAME" bundle="${lang}"/>">
+    </div>
+    <div class="form-group">
+        <label for="passport"><fmt:message key="PASSPORT" bundle="${lang}"/></label>
+        <input type="text" name="passport" class="form-control" id="passport" required
+               placeholder="<fmt:message key="PASSPORT_FORMAT" bundle="${lang}"/>">
+    </div>
+    <div class="form-group">
+        <label for="email"><fmt:message key="EMAIL" bundle="${lang}"/></label>
+        <input type="text" name="email" class="form-control" id="email" required
+               pattern="^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$"
+               placeholder="<fmt:message key="EMAIL" bundle="${lang}"/>">
+    </div>
+    <div class="form-group">
+        <label for="password"><fmt:message key="PASSWORD" bundle="${lang}"/></label>
+        <input type="text" name="password" class="form-control" id="password" required
+               placeholder="<fmt:message key="PASSWORD" bundle="${lang}"/>">
+    </div>
+    <div class="form-group">
+        <label for="password_repeat"><fmt:message key="REPEAT_PASSWORD" bundle="${lang}"/></label>
+        <input type="text" name="password_repeat" class="form-control" id="password_repeat" required
+               placeholder="<fmt:message key="REPEAT_PASSWORD" bundle="${lang}"/>">
+    </div>
+    <button type="submit" class="btn btn-primary">OK</button>
 </form>
-<%@include file="/WEB-INF/jsp/layout/footer.jsp" %>
-</body>
-</html>
+<%@include file="/WEB-INF/jsp/layout/footer.jspf" %>
+

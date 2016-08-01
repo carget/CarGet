@@ -1,7 +1,9 @@
 package ua.mishkyroff.carget.entities;
 
 /**
- * Created by U on 26.07.2016.
+ * A FuelType represents type of fuel
+ *
+ * @author Anton Mishkyroff
  */
 public enum FuelType {
     PETROL, GASOLINE, DISEL, ALL

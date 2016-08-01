@@ -1,13 +1,20 @@
 <%--SHOW ADMIN MENU--%>
-<form action="${pageContext.request.contextPath}/pages/admin_new_orders" method="get">
-    <input type="submit" value="<fmt:message key="NEW_ORDERS" bundle="${lang}"/>">
-</form>
-<form action="${pageContext.request.contextPath}/pages/admin_approved_orders" method="get">
-    <input type="submit" value="<fmt:message key="APPROVED_ORDERS" bundle="${lang}"/>">
-</form>
-<form action="${pageContext.request.contextPath}/pages/admin_rejected_orders" method="get">
-    <input type="submit" value="<fmt:message key="REJECTED_ORDERS" bundle="${lang}"/>">
-</form>
-<form action="${pageContext.request.contextPath}/pages/admin_completed_orders" method="get">
-    <input type="submit" value="<fmt:message key="COMPLETED_ORDERS" bundle="${lang}"/>">
-</form>
+<li>
+    <a href="${pageContext.request.contextPath}/pages/admin_new_orders">
+        <fmt:message key="NEW_ORDERS" bundle="${lang}"/>
+    </a>
+</li>
+<li>
+    <a href="${pageContext.request.contextPath}/pages/admin_approved_orders">
+        <fmt:message key="APPROVED_ORDERS" bundle="${lang}"/>
+    </a>
+<li>
+    <a href="${pageContext.request.contextPath}/pages/admin_rejected_orders">
+        <fmt:message key="REJECTED_ORDERS" bundle="${lang}"/>
+    </a>
+</li>
+<li>
+    <a href="${pageContext.request.contextPath}/pages/admin_completed_orders">
+        <fmt:message key="COMPLETED_ORDERS" bundle="${lang}"/>
+    </a>
+</li>

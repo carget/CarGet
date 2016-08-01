@@ -2,6 +2,7 @@ package ua.mishkyroff.carget.commands.post;
 
 import ua.mishkyroff.carget.commands.Command;
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
+import ua.mishkyroff.carget.controllers.JspPages;
 import ua.mishkyroff.carget.controllers.SessionAttributes;
 import ua.mishkyroff.carget.dao.DAOFactory;
 import ua.mishkyroff.carget.entities.OrderStatus;
@@ -17,21 +18,21 @@ import ua.mishkyroff.carget.entities.OrderStatus;
  */
 public class RejectOrderCommand implements Command {
     @Override
-    public String execute(IRequestWrapper wrapper) {
+    public JspPages execute(IRequestWrapper wrapper) {
 
         String orderIdFromRequest = wrapper.getParameter("order_id");
-        if (orderIdFromRequest == null){
+        if (orderIdFromRequest == null) {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, FIRSTLY_CHOOSE_ORDER);
-            return NEW_ORDERS;
+            return JspPages.ADMIN_NEW_ORDERS;
         }
         Integer orderId = Integer.valueOf(orderIdFromRequest);
         String reason = wrapper.getParameter("reason");
-        if (reason==null) {
+        if (reason == null) {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, ENTER_REASON_FOR_REJECT);
-            return NEW_ORDERS;
+            return JspPages.ADMIN_NEW_ORDERS;
         }
         DAOFactory.getInstance().getOrdersDAO().setOrderStatusCommentById(orderId, OrderStatus
                 .REJECTED, reason);
-        return NEW_ORDERS;
+        return JspPages.ADMIN_NEW_ORDERS;
     }
 }

@@ -1,12 +1,6 @@
-<%@include file="/WEB-INF/jsp/layout/header.jsp" %>
-<html>
-<head>
-    <title><fmt:message key="CAR_INFO" bundle="${lang}"/> </title>
-</head>
-<body>
-<%--MENU--%>
-<%@include file="/WEB-INF/jsp/layout/menu/menu.jsp" %>
+<%@include file="/WEB-INF/jsp/layout/header.jspf" %>
+
 <%--SHOW TABLE WITH ONE CAR--%>
 <%@include file="/WEB-INF/jsp/layout/fragments/one_car.jsp" %>
-</body>
-</html>
+
+<%@include file="/WEB-INF/jsp/layout/footer.jspf" %>

@@ -8,9 +8,12 @@ package ua.mishkyroff.carget.controllers;
  * @author Anton Mishkyroff
  */
 public interface IRequestWrapper {
-    //TODO reqrite to ENUM session attributes
 
     String getParameter(String key);
+
+    Object getRequestAttribute(RequestAttributes name);
+
+    void setRequestAttribute(RequestAttributes name, Object attribute);
 
     String getMethod();
 

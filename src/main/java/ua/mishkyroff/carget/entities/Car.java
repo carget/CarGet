@@ -1,7 +1,10 @@
 package ua.mishkyroff.carget.entities;
 
 /**
- * Created by U on 26.07.2016.
+ * A Car entity stores information about car's information
+ * The entity has its representation in the database
+ *
+ * @author Anton Mishkyroff
  */
 public class Car {
     private int idCar;

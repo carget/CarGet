@@ -2,6 +2,7 @@ package ua.mishkyroff.carget.commands.get;
 
 import ua.mishkyroff.carget.commands.Command;
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
+import ua.mishkyroff.carget.controllers.JspPages;
 
 /**
  * A command for process GET requests with "/guest_register" uri
@@ -11,7 +12,7 @@ import ua.mishkyroff.carget.controllers.IRequestWrapper;
  */
 public class RegisterCommand implements Command {
     @Override
-    public String execute(IRequestWrapper wrapper) {
-        return REGISTER;
+    public JspPages execute(IRequestWrapper wrapper) {
+        return JspPages.GUEST_REGISTER;
     }
 }

@@ -1,6 +1,7 @@
 package ua.mishkyroff.carget.commands;
 
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
+import ua.mishkyroff.carget.controllers.JspPages;
 
 /**
  * A Command for operating requests to the "/" or "/index" uri.
@@ -11,7 +12,7 @@ import ua.mishkyroff.carget.controllers.IRequestWrapper;
 public class EmptyCommand implements Command {
 
     @Override
-    public String execute(IRequestWrapper wrapper) {
-        return INDEX;
+    public JspPages execute(IRequestWrapper wrapper) {
+        return JspPages.INDEX;
     }
 }

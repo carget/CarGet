@@ -51,7 +51,6 @@ public class OrdersDAO {
     }
 
     public boolean addOrder(Order order) {
-//TODO test setDATE!
         try (Connection conn = ds.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(BUNDLE.getString("INSERT_ORDER"));
             ps.setString(1, String.valueOf(order.getUser().getId()));

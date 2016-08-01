@@ -2,10 +2,9 @@ package ua.mishkyroff.carget.controllers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ua.mishkyroff.carget.commands.Command;
 import ua.mishkyroff.carget.commands.ActionFactoryGet;
 import ua.mishkyroff.carget.commands.ActionFactoryPost;
-import ua.mishkyroff.carget.commands.JspPathFactory;
+import ua.mishkyroff.carget.commands.Command;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * {@code Controller} class extends {@code HttpServlet} class responsible
+ * {@code MainServlet} class extends {@code HttpServlet} class responsible
  * for receiving all valid http requests.
  * It retrieves corresponding Command object for given request and execute the Command.
  * Then it does redirect for all POST requests to avoid "double submit problem"
@@ -25,7 +24,7 @@ import java.io.IOException;
  * @see #doPost method
  */
 
-public class Controller extends HttpServlet {
+public class MainServlet extends HttpServlet {
 
     private static final Logger LOGGER = LogManager.getLogger("toConsole");
 
@@ -37,10 +36,10 @@ public class Controller extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         IRequestWrapper wrapper = new RequestWrapper(request);
         Command command = ActionFactoryPost.getInstance().getCommand(wrapper);
-        String view = command.execute(wrapper);
+        JspPages view = command.execute(wrapper);
         try {
             LOGGER.debug("----POST Redirect to " + view);
-            response.sendRedirect(view);
+            response.sendRedirect(view.toString());
         } catch (IOException e) {
             LOGGER.error("Error during processing POST request ", e.getMessage());
         }
@@ -55,17 +54,17 @@ public class Controller extends HttpServlet {
 
         IRequestWrapper wrapper = new RequestWrapper(request);
         Command command = ActionFactoryGet.getInstance().getCommand(wrapper);
-        String view = command.execute(wrapper);
+        JspPages view = command.execute(wrapper);
         String pathInfo = wrapper.getPathInfo();
         pathInfo = (pathInfo == null || pathInfo.equals("/")) ? "/index" : pathInfo;
         try {
-            if (view.equals(pathInfo.substring(1))) {
-                String forwardPath = JspPathFactory.getInstance().getJspPath(view);
+            if (view.toString().toLowerCase().equals(pathInfo.substring(1))) {
+                String forwardPath = view.getPath();
                 LOGGER.debug("-----GET----- FORWARD to " + forwardPath);
                 request.getRequestDispatcher(forwardPath).forward(request, response);
             } else {
                 LOGGER.debug("-----GET----- REDIRECT to " + view);
-                response.sendRedirect(view);
+                response.sendRedirect(view.toString());
             }
         } catch (ServletException | IOException e) {
             LOGGER.error("Error during processing GET request " + e.getMessage());

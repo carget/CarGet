@@ -1,8 +1,9 @@
 package ua.mishkyroff.carget.commands.post;
 
-import ua.mishkyroff.carget.controllers.SessionAttributes;
 import ua.mishkyroff.carget.commands.Command;
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
+import ua.mishkyroff.carget.controllers.JspPages;
+import ua.mishkyroff.carget.controllers.SessionAttributes;
 import ua.mishkyroff.carget.dao.DAOFactory;
 import ua.mishkyroff.carget.dao.UsersDAO;
 import ua.mishkyroff.carget.entities.User;
@@ -17,7 +18,7 @@ import ua.mishkyroff.carget.entities.User;
  */
 public class RegistrationCommand implements Command {
     @Override
-    public String execute(IRequestWrapper wrapper) {
+    public JspPages execute(IRequestWrapper wrapper) {
 
         String firstName = wrapper.getParameter("firstName");
         String lastName = wrapper.getParameter("lastName");
@@ -33,20 +34,20 @@ public class RegistrationCommand implements Command {
                 password == null ||
                 password_repeat == null) {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, FILL_ALL_FIELDS);
-            return REGISTER;
+            return JspPages.GUEST_REGISTER;
         }
 
         if (!password.equals(password_repeat)) {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, ERROR_PASSWORDS_ARE_NOT_EQUAL);
-            return REGISTER;
+            return JspPages.GUEST_REGISTER;
         }
         if (!passport.matches("[A-zА-я]{2}[0-9]{6}")) {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, ERROR_PASPORT_NUMBER_INCORRECT);
-            return REGISTER;
+            return JspPages.GUEST_REGISTER;
         }
         if (!email.matches("^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$")) {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, ERROR_EMAIL_INCORRECT);
-            return REGISTER;
+            return JspPages.GUEST_REGISTER;
         }
 
         User u = new User();
@@ -63,7 +64,7 @@ public class RegistrationCommand implements Command {
         } else {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, ERROR_USER_REGISTERED_SUCCESSFULLY);
         }
-        return INDEX;
+        return JspPages.INDEX;
 
     }
 }

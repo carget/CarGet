@@ -1,7 +1,9 @@
 package ua.mishkyroff.carget.entities;
 
 /**
- * Created by U on 26.07.2016.
+ * A UserRole represents type of user role
+ *
+ * @author Anton Mishkyroff
  */
 public enum UserRole {
     ADMIN, USER, GUEST

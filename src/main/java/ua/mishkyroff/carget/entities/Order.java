@@ -3,7 +3,10 @@ package ua.mishkyroff.carget.entities;
 import java.sql.Date;
 
 /**
- * Created by U on 26.07.2016.
+ * A Order entity stores information about order
+ * The entity has its representation in the database
+ *
+ * @author Anton Mishkyroff
  */
 public class Order {
     private int idOrder;

@@ -2,9 +2,10 @@ package ua.mishkyroff.carget.commands.post;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ua.mishkyroff.carget.controllers.SessionAttributes;
 import ua.mishkyroff.carget.commands.Command;
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
+import ua.mishkyroff.carget.controllers.JspPages;
+import ua.mishkyroff.carget.controllers.SessionAttributes;
 import ua.mishkyroff.carget.dao.DAOFactory;
 import ua.mishkyroff.carget.dao.UsersDAO;
 import ua.mishkyroff.carget.entities.User;
@@ -24,13 +25,13 @@ public class LoginCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger("toConsole");
 
     @Override
-    public String execute(IRequestWrapper wrapper) {
+    public JspPages execute(IRequestWrapper wrapper) {
 
         String email = wrapper.getParameter("email");
         String password = wrapper.getParameter("password");
         if (email==null || password==null) {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, ERROR_INVALID_USER);
-            return INDEX;
+            return JspPages.INDEX;
         }
         UsersDAO userDao = DAOFactory.getInstance().getUsersDAO();
         User user = userDao.getUserByEmail(email);
@@ -46,6 +47,6 @@ public class LoginCommand implements Command {
             LOGGER.debug("Invalid user");
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, ERROR_INVALID_USER);
         }
-        return INDEX;
+        return JspPages.INDEX;
     }
 }

@@ -1,4 +1,4 @@
-<table>
+<table class="table">
     <th><fmt:message key="ORDER_ID" bundle="${lang}"/></th>
     <th><fmt:message key="CAR" bundle="${lang}"/></th>
     <th><fmt:message key="FIRST_NAME" bundle="${lang}"/></th>
@@ -9,7 +9,7 @@
     <th><fmt:message key="FINE" bundle="${lang}"/></th>
     <th><fmt:message key="STATUS" bundle="${lang}"/></th>
     <th><fmt:message key="COMMENT" bundle="${lang}"/></th>
-    <c:forEach var="order" items="${sessionScope.orders}">
+    <c:forEach var="order" items="${requestScope.orders}">
         <tr>
             <td>${order.idOrder}</td>
             <td>

@@ -3,35 +3,42 @@ package ua.mishkyroff.carget.listeners;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.dao.DAOFactory;
-import ua.mishkyroff.carget.dao.DBInitializationDAO;
+import ua.mishkyroff.carget.dao.Exceptions.DBStructureError;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.sql.SQLException;
 
 /**
- * Created by U on 24.07.2016.
+ * Class {@code DatabaseInitListener} checks DB structure and initialize DataSource object
+ * If some required tables are missing throw exception
+ *
+ * @author Anton Mishkyroff
  */
 public class DatabaseInitListener implements ServletContextListener {
 
-    private static final Logger LOGGER_CONSOLE = LogManager.getLogger("toConsole");
+    private static final Logger LOGGER = LogManager.getLogger("toConsole");
+    private static final Logger LOGGER_FILE = LogManager.getLogger("toFile");
 
+    /**
+     * Initialize DataSource and check database for required tables
+     */
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
-        //init datasource
-        //create tables in DB and fill it with default (example) values
         try {
-            DBInitializationDAO DBInitializationDAO = DAOFactory.getInstance().getInitDBDAO();
-            DBInitializationDAO.initDB();
+             DAOFactory.getInstance().getInitDBDAO().initAndCheckDB();
         } catch (SQLException e) {
-            LOGGER_CONSOLE.error("error during DB initialization " + e.getMessage());
+            LOGGER.error("SQL error during DB initialization " + e.getMessage());
+        } catch (DBStructureError dbStructureError) {
+            LOGGER.error(dbStructureError.getMessage());
         }
-        LOGGER_CONSOLE.info("DB initialized!");
+        LOGGER.info("DB checked!");
+        LOGGER_FILE.info("DB checked!");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        LOGGER_CONSOLE.info("Context destroyed!");
+        LOGGER.info("Context destroyed!");
     }
 }

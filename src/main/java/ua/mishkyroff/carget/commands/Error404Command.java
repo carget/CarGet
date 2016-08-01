@@ -1,6 +1,7 @@
 package ua.mishkyroff.carget.commands;
 
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
+import ua.mishkyroff.carget.controllers.JspPages;
 
 /**
  * A Command for operating requests with not defined uri.
@@ -10,7 +11,7 @@ import ua.mishkyroff.carget.controllers.IRequestWrapper;
  */
 public class Error404Command implements Command {
     @Override
-    public String execute(IRequestWrapper wrapper) {
-        return ERROR_404;
+    public JspPages execute(IRequestWrapper wrapper) {
+        return JspPages.ERROR_404;
     }
 }

@@ -16,7 +16,7 @@
 
     <servlet>
         <servlet-name>MainServlet</servlet-name>
-        <servlet-class>ua.mishkyroff.carget.controllers.Controller</servlet-class>
+        <servlet-class>ua.mishkyroff.carget.controllers.MainServlet</servlet-class>
     </servlet>
 
     <session-config>
@@ -86,6 +86,15 @@
     <filter-mapping>
         <filter-name>securityFilter</filter-name>
         <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>switchLangFilter</filter-name>
+        <filter-class>ua.mishkyroff.carget.filters.SwitchLangFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>switchLangFilter</filter-name>
+        <url-pattern>/pages/change_lang/*</url-pattern>
     </filter-mapping>
 
     <error-page>

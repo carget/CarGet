@@ -1,7 +1,10 @@
 package ua.mishkyroff.carget.entities;
 
 /**
- * Created by U on 16.07.2016.
+ * A User entity stores information about user's information
+ * The entity has its representation in the database
+ *
+ * @author Anton Mishkyroff
  */
 public class User {
     private int id;

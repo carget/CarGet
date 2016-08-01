@@ -2,7 +2,8 @@ package ua.mishkyroff.carget.commands.get;
 
 import ua.mishkyroff.carget.commands.Command;
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
-import ua.mishkyroff.carget.controllers.SessionAttributes;
+import ua.mishkyroff.carget.controllers.JspPages;
+import ua.mishkyroff.carget.controllers.RequestAttributes;
 import ua.mishkyroff.carget.dao.DAOFactory;
 import ua.mishkyroff.carget.entities.OrderStatus;
 
@@ -15,10 +16,10 @@ import ua.mishkyroff.carget.entities.OrderStatus;
  */
 public class CompletedOrdersCommand implements Command {
     @Override
-    public String execute(IRequestWrapper wrapper) {
+    public JspPages execute(IRequestWrapper wrapper) {
 
-        wrapper.setSessionAttribute(SessionAttributes.ORDERS, DAOFactory.getInstance().getOrdersDAO()
+        wrapper.setRequestAttribute(RequestAttributes.ORDERS, DAOFactory.getInstance().getOrdersDAO()
                 .getAllOrdersByStatus(OrderStatus.COMPLETED));
-        return COMPLETED_ORDERS;
+        return JspPages.ADMIN_COMPLETED_ORDERS;
     }
 }

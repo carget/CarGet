@@ -11,7 +11,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by U on 24.07.2016.
+ * This filter checks session parameters and sets it to default values if they are invalid
+ * Also this filter sets language to user's default value from browser if other not specified
+ *
+ * @author Anton Mishkyroff
  */
 public class CheckSessionFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger("toConsole");

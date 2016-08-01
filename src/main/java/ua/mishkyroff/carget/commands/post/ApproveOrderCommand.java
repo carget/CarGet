@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.commands.Command;
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
+import ua.mishkyroff.carget.controllers.JspPages;
 import ua.mishkyroff.carget.dao.DAOFactory;
 import ua.mishkyroff.carget.entities.OrderStatus;
 
@@ -19,15 +20,15 @@ public class ApproveOrderCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger("toConsole");
 
     @Override
-    public String execute(IRequestWrapper wrapper) {
+    public JspPages execute(IRequestWrapper wrapper) {
         Integer orderId = null;
         try {
             orderId = Integer.valueOf(wrapper.getParameter("order_id"));
         } catch (NumberFormatException e) {
             LOGGER.error(" can't parse order_id " + e.getMessage());
-            return INDEX;
+            return JspPages.INDEX;
         }
         DAOFactory.getInstance().getOrdersDAO().setOrderStatusById(orderId, OrderStatus.APPROVED);
-        return NEW_ORDERS;
+        return JspPages.ADMIN_NEW_ORDERS;
     }
 }

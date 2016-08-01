@@ -7,7 +7,10 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 /**
- * Created by U on 25.07.2016.
+ * Class {@code SessionListener} generates CSRF token and store as session attribute each time
+ * session was created
+ *
+ * @author Anton Mishkyroff
  */
 public class SessionListener implements HttpSessionListener {
     private static final Logger LOGGER_CONSOLE = LogManager.getLogger("toConsole");
@@ -17,8 +20,7 @@ public class SessionListener implements HttpSessionListener {
         //generate CSRF token
         //TODO improve generator
         Long token = (long) (Math.random() * Long.MAX_VALUE);
-        httpSessionEvent.getSession().
-                setAttribute("csrfToken", token);
+        httpSessionEvent.getSession().setAttribute("csrfToken", token);
         LOGGER_CONSOLE.info("Session created and CSRF Token has been generated = " + token);
     }
 

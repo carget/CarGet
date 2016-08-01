@@ -4,7 +4,9 @@ import javax.servlet.*;
 import java.io.IOException;
 
 /**
- * Created by U on 17.07.2016.
+ * This filter sets encoding in request and response to the selected in web.xml file
+ *
+ * @author Anton Mishkyroff
  */
 public class EncodingFilter implements Filter {
     private String enc;

@@ -4,10 +4,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.commands.Command;
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
+import ua.mishkyroff.carget.controllers.JspPages;
+import ua.mishkyroff.carget.controllers.RequestAttributes;
 import ua.mishkyroff.carget.controllers.SessionAttributes;
+import ua.mishkyroff.carget.dao.CarFilter;
 import ua.mishkyroff.carget.dao.DAOFactory;
 import ua.mishkyroff.carget.entities.Car;
-import ua.mishkyroff.carget.dao.CarFilter;
 
 import java.util.List;
 
@@ -25,10 +27,10 @@ public class ChooseAutoCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger("toConsole");
 
     @Override
-    public String execute(IRequestWrapper wrapper) {
+    public JspPages execute(IRequestWrapper wrapper) {
         //create and init filter object with default params
         CarFilter carFilter = (CarFilter) wrapper
-                .getSessionAttribute(SessionAttributes.CAR_FILTER);
+                .getRequestAttribute(RequestAttributes.CAR_FILTER);
         if (carFilter == null) {
             carFilter = new CarFilter();
         }
@@ -45,10 +47,10 @@ public class ChooseAutoCommand implements Command {
         }
 
         //update filter and filtered cars objects
-        wrapper.setSessionAttribute(SessionAttributes.CAR_FILTER, carFilter);
+        wrapper.setRequestAttribute(RequestAttributes.CAR_FILTER, carFilter);
         List<Car> cars = DAOFactory.getInstance().getCarsDAO().filterAndGetCars(carFilter);
-        wrapper.setSessionAttribute(SessionAttributes.CARS, cars);
-        return CHOOSE_AUTO;
+        wrapper.setRequestAttribute(RequestAttributes.CARS, cars);
+        return JspPages.CHOOSE_AUTO;
     }
 
 

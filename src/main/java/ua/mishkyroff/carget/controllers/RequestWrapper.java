@@ -37,6 +37,28 @@ public class RequestWrapper implements IRequestWrapper {
     }
 
     /**
+     * Retrieves attribute object stored in request container by given name
+     *
+     * @param name - attribute name
+     * @return - attribute object
+     */
+    @Override
+    public Object getRequestAttribute(RequestAttributes name) {
+        return request.getAttribute(name.toString());
+    }
+
+    /**
+     * Saves attribute to request container
+     *
+     * @param name      - attribute name
+     * @param attribute - attribute value
+     */
+    @Override
+    public void setRequestAttribute(RequestAttributes name, Object attribute) {
+        request.setAttribute(name.toString(), attribute);
+    }
+
+    /**
      * Retrieves information about request method (POST, GET, etc)
      *
      * @return string represents request method

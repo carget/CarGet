@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/bootstrap.css" type="text/css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/dopstyle.css" type="text/css"/>
+
+<%@ page contentType="text/html; charset=UTF-8" language="java"
+         pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="/WEB-INF/tld/csrftag_lib.tld" prefix="mytag" %>
+<%@ page session="true" %>
+
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="language" var="lang"/>
+
+<html>
+<head>
+    <title><fmt:message key="CARGET_TITLE" bundle="${lang}"/></title>
+</head>
+<body>
+<div class="container">
+    <%--&lt;%&ndash;HEAD IMAGE&ndash;%&gt;--%>
+    <%--<div class="col-md-12 head-block"></div>--%>
+    <%--MENU--%>
+    <%@include file="/WEB-INF/jsp/layout/menu/menu.jsp" %>
+    <div class="row">
+        <div class="col-md-3">
+            <h4><fmt:message key="HELLO" bundle="${lang}"/>
+                <c:if test="${not empty sessionScope.user_name}">
+                    <c:out value=","/>
+                    <br>
+                    <c:out value="${sessionScope.user_name}"/>
+                </c:if>
+                <br>
+                <c:out value="("/>
+                <fmt:message key="${sessionScope.user_role}" bundle="${lang}"/>
+                <c:out value=")"/>
+            </h4>
+            <c:if test="${sessionScope.user_role=='ADMIN' or sessionScope.user_role=='USER'}">
+                <%--LOGOUT--%>
+                <a class="btn btn-primary" href="${pageContext.request.contextPath}/pages/logout">
+                    <fmt:message key="LOGOUT" bundle="${lang}"/>
+                </a>
+            </c:if>
+            <hr>
+            <%--SHOW ERROR MESSAGE IF EXISTS--%>
+            <c:if test="${not empty sessionScope.error}">
+                <fmt:message key="${sessionScope.error}" bundle="${lang}"/>
+                <c:remove var="error" scope="session"/>
+            </c:if>
+            <%--SHOW login form only if user==guest--%>
+            <c:if test="${empty sessionScope.user_role or sessionScope.user_role=='GUEST'}">
+                <form name="checkLogin"
+                      action="${pageContext.request.contextPath}/pages/guest_login"
+                      method="post">
+                    <mytag:csrfTag name="token"/>
+                    <div class="form-group">
+                        <label for="email"><fmt:message key="EMAIL" bundle="${lang}"/></label>
+                        <input type="text" name="email" class="form-control" id="email" required
+                               placeholder="<fmt:message key="EMAIL" bundle="${lang}"/>">
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><fmt:message key="PASSWORD" bundle="${lang}"/></label>
+                        <input type="password" name="password" class="form-control" id="password"
+                               required
+                               placeholder="<fmt:message key="PASSWORD" bundle="${lang}"/>">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <fmt:message key="ENTER" bundle="${lang}"/></button>
+                        <%--<fmt:message key="EMAIL" bundle="${lang}"/><br/>--%>
+                        <%--<input type="text" name="email" value=""/><br/>--%>
+                        <%--<fmt:message key="PASSWORD" bundle="${lang}"/><br/>--%>
+                        <%--<input type="password" name="password" value=""/>--%>
+                        <%--<input type="submit" name="button" value=<fmt:message key="ENTER"--%>
+                        <%--bundle="${lang}"/>>--%>
+                </form>
+            </c:if>
+        </div>
+        <%--</div>--%>
+        <%--<div class="row">--%>
+        <div class="col-md-9">

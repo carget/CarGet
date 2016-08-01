@@ -1,6 +1,7 @@
 package ua.mishkyroff.carget.commands;
 
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
+import ua.mishkyroff.carget.controllers.JspPages;
 
 /**
  * This singleton class used to retrieve corresponding {@code Command} object for given uri
@@ -45,12 +46,13 @@ public interface Command {
     String ERROR_PASSWORDS_ARE_NOT_EQUAL = "PASSWORDS_ARE_NOT_EQUAL";
     String ERROR_PASPORT_NUMBER_INCORRECT = "PASPORT_NUMBER_INCORRECT";
     String ERROR_EMAIL_INCORRECT = "EMAIL_INCORRECT";
+    String ERROR_COMPLETING_ORDER = "ERROR_COMPLETING_ORDER";
 
     /**
      * Processes a request by retrieving all necessary parameters from it,
      * validates this params, sets error message if there are some problems with params
      * Business logic layer is here
      */
-    String execute(IRequestWrapper wrapper);
+    JspPages execute(IRequestWrapper wrapper);
 
 }

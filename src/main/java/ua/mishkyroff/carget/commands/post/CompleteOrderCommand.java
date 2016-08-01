@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.commands.Command;
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
+import ua.mishkyroff.carget.controllers.JspPages;
+import ua.mishkyroff.carget.controllers.SessionAttributes;
 import ua.mishkyroff.carget.dao.DAOFactory;
 import ua.mishkyroff.carget.entities.OrderStatus;
 
@@ -21,22 +23,20 @@ public class CompleteOrderCommand implements Command {
 
 
     @Override
-    public String execute(IRequestWrapper wrapper) {
-        Integer orderId = null;
-        Double fine = null;
-        try {
-            orderId = Integer.valueOf(wrapper.getParameter("order_id"));
-            fine = Double.valueOf(wrapper.getParameter("fine"));
-        } catch (NumberFormatException e) {
-            LOGGER.error(" can't parse parameters from request (order_id, fine) " + e.getMessage());
-            return INDEX;
+    public JspPages execute(IRequestWrapper wrapper) {
+        String orderId = wrapper.getParameter("order_id");
+        String fine = wrapper.getParameter("fine");
+
+        if (orderId == null || fine == null) {
+            wrapper.setSessionAttribute(SessionAttributes.MESSAGE, ERROR_COMPLETING_ORDER);
+            return JspPages.INDEX;
         }
         String comment = wrapper.getParameter("comment");
         comment = comment == null ? "" : comment;
         boolean orderCompleted = DAOFactory.getInstance().getOrdersDAO()
-                .setOrderStatusCommentFineById(orderId, OrderStatus.COMPLETED, comment, fine);
+                .setOrderStatusCommentFineById(Integer.valueOf(orderId), OrderStatus.COMPLETED, comment, Double.valueOf(fine));
         LOGGER.debug(" order completed = " + orderCompleted);
         //TODO refresh orders object
-        return COMPLETED_ORDERS;
+        return JspPages.ADMIN_COMPLETED_ORDERS;
     }
 }

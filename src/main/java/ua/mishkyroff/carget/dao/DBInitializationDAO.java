@@ -22,21 +22,28 @@ import java.util.Set;
  */
 public class DBInitializationDAO {
     private final DataSource ds;
-    private static final Logger LOGGER_SQL = LogManager.getLogger("toConsole");
+    private static final Logger LOGGER = LogManager.getLogger("toConsole");
 
     DBInitializationDAO(DataSource ds) {
         this.ds = ds;
     }
 
-    public void initDB() throws SQLException, DBStructureError {
+    /**
+     * Method checks and compare required and real table names in database
+     * And throws DBStructureError if some or all tables are missing
+     *
+     * @throws DBStructureError - thrown if some or all table are missing in database
+     */
+    public void initAndCheckDB() throws SQLException, DBStructureError {
         Connection connection = ds.getConnection();
         //check metainf table
         DatabaseMetaData metaData = connection.getMetaData();
         ResultSet rs = metaData.getTables(null, null, "%", null);
         Set<String> realTables = new HashSet<>();
-        if (!rs.next()) {
-            realTables.add(rs.getString("TABLE_NAME"));
-            LOGGER_SQL.debug("TABLE NAME=" + rs.getString("TABLE_NAME"));
+        while (rs.next()) {
+            String tableName = rs.getString("TABLE_NAME");
+            realTables.add(tableName);
+            LOGGER.debug("DB TABLE NAME=" + tableName);
         }
         Set<String> requiredTables = new HashSet<>();
         requiredTables.add("brands");
@@ -46,7 +53,7 @@ public class DBInitializationDAO {
         requiredTables.add("users");
         if (!realTables.containsAll(requiredTables)) {
             //some tables are missing!
-            throw new DBStructureError("Database structure Error! \n Init DB first! \nDB does not" +
+            throw new DBStructureError("Database structure Error!\nInit DB first!\nDB does not" +
                     " have some or all of required tables. Required tables are: " + requiredTables);
         }
     }

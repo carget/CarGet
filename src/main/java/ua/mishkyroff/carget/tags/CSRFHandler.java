@@ -9,7 +9,9 @@ import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
 /**
- * Created by U on 29.07.2016.
+ * Class {@code CSRFHandler} used for injection CSRF token to JSP as input hidden parameter
+ *
+ * @author Anton Mishkyroff
  */
 public class CSRFHandler extends TagSupport {
     private static final Logger LOGGER = LogManager.getLogger("toConsole");

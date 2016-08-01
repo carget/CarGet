@@ -1,4 +1,4 @@
-<table>
+<table class="table">
     <th><fmt:message key="BRAND" bundle="${lang}"/></th>
     <th><fmt:message key="MODEL" bundle="${lang}"/></th>
     <th><fmt:message key="YEAR" bundle="${lang}"/></th>
@@ -10,15 +10,15 @@
     <th><fmt:message key="FUEL" bundle="${lang}"/></th>
     <th><fmt:message key="PRICE" bundle="${lang}"/></th>
     <tr>
-        <td>${sessionScope.car.model.brand.brandAbbr}</td>
-        <td>${sessionScope.car.model.modelName}</td>
-        <td>${sessionScope.car.year}</td>
-        <td>${sessionScope.car.model.power}</td>
-        <td>${sessionScope.car.model.className}</td>
-        <td>${sessionScope.car.model.doorsQty}</td>
-        <td><fmt:message key="${sessionScope.car.model.automat}" bundle="${lang}"/></td>
-        <td><fmt:message key="${sessionScope.car.model.condition}" bundle="${lang}"/></td>
-        <td><fmt:message key="${sessionScope.car.fuelType}" bundle="${lang}"/></td>
-        <td>${sessionScope.car.pricePerDay}</td>
+        <td>${requestScope.car.model.brand.brandAbbr}</td>
+        <td>${requestScope.car.model.modelName}</td>
+        <td>${requestScope.car.year}</td>
+        <td>${requestScope.car.model.power}</td>
+        <td>${requestScope.car.model.className}</td>
+        <td>${requestScope.car.model.doorsQty}</td>
+        <td><fmt:message key="${requestScope.car.model.automat}" bundle="${lang}"/></td>
+        <td><fmt:message key="${requestScope.car.model.condition}" bundle="${lang}"/></td>
+        <td><fmt:message key="${requestScope.car.fuelType}" bundle="${lang}"/></td>
+        <td>${requestScope.car.pricePerDay}</td>
     </tr>
 </table>

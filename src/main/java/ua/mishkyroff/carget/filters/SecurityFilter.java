@@ -11,7 +11,13 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by U on 16.07.2016.
+ * Security filter checks CSRF token for all POST requests.
+ * Redirects to index if CSRF token does not match in request and current session.
+ * Also checks user role and corresponding uri.
+ * Set error message in session and redirect to error page
+ * if current user role does not match to requested uri.
+ *
+ * @author Anton Mishkyroff
  */
 public class SecurityFilter implements Filter {
 

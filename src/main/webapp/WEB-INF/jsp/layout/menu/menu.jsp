@@ -1,64 +1,63 @@
-<a href="${pageContext.request.contextPath}/pages/change_lang?language=RU"><fmt:message key="RUS"
-                                                                                        bundle="${lang}"/></a>
-<a href="${pageContext.request.contextPath}/pages/change_lang?language=EN"><fmt:message key="ENG"
-                                                                                        bundle="${lang}"/></a>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/pages/index">
+                <span class="glyphicons glyphicons-home"></span>CarGet</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <%--SHOW CHOOSE AUTO OPTION--%>
+            <c:if test="${sessionScope.user_role!='ADMIN'}">
+                <li>
+                    <a href="${pageContext.request.contextPath}/pages/choose_auto">
+                        <fmt:message key="CHOOSE_AUTO" bundle="${lang}"/>
+                    </a>
+                </li>
+            </c:if>
+            <%--USER ROLE DEPENDANT--%>
+            <c:if test="${sessionScope.user_role=='USER'}">
+                <%@include file="/WEB-INF/jsp/layout/menu/user_menu.jsp" %>
+            </c:if>
+            <c:if test="${sessionScope.user_role=='ADMIN'}">
+                <%@include file="/WEB-INF/jsp/layout/menu/admin_menu.jsp" %>
+            </c:if>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <%--REGISTER--%>
+            <c:choose>
+                <c:when test="${sessionScope.user_role=='ADMIN' or sessionScope.user_role=='USER'}">
+                    <li>
+                            <%--LOGOUT--%>
+                        <a href="${pageContext.request.contextPath}/pages/logout">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                                <fmt:message key="LOGOUT" bundle="${lang}"/>
+                        </a>
+                    </li>
+                </c:when>
+                <c:otherwise>
+                    <%--LOGIN--%>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/pages/index">
+                        <span class="glyphicon glyphicon-log-in"></span>
+                                <fmt:message key="ENTER" bundle="${lang}"/>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/pages/guest_register">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <fmt:message key="REGISTER" bundle="${lang}"/>
+                        </a>
+                    </li>
+                </c:otherwise>
+            </c:choose>
+            <li>
+                <a href="${pageContext.request.contextPath}/pages/change_lang?language=RU">
+                    <fmt:message key="RUS" bundle="${lang}"/></a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/pages/change_lang?language=EN">
+                    <fmt:message key="ENG" bundle="${lang}"/></a>
+            </li>
 
-<%--<form action="${pageContext.request.contextPath}/pages/change_lang" method="get">
-    <input type="hidden" name="language" value="RU"/>
-    <input type="submit" value="<fmt:message key="RUS" bundle="${lang}"/>">
-</form>
-
-<form action="${pageContext.request.contextPath}/pages/change_lang" method="get">
-    <input type="hidden" name="language" value="EN"/>
-    <input type="submit" value="<fmt:message key="ENG" bundle="${lang}"/>">
-</form>--%>
-<%--MENU--%>
-<%--SHOW CHOOSE AUTO OPTION--%>
-<c:if test="${sessionScope.user_role!='ADMIN'}">
-    <form action="${pageContext.request.contextPath}/pages/choose_auto" method="get">
-        <input type="submit" value="<fmt:message key="CHOOSE_AUTO" bundle="${lang}"/>">
-    </form>
-</c:if>
-<%--REGISTER--%>
-<c:choose>
-    <c:when test="${sessionScope.user_role=='ADMIN' or sessionScope.user_role=='USER'}">
-        <%--LOGOUT--%>
-        <form action="${pageContext.request.contextPath}/pages/logout" method="get">
-            <input type="submit" value="<fmt:message key="LOGOUT" bundle="${lang}"/>">
-        </form>
-    </c:when>
-    <c:otherwise>
-        <form action="${pageContext.request.contextPath}/pages/guest_register" method="get">
-            <input type="submit" value="<fmt:message key="REGISTER" bundle="${lang}"/>">
-        </form>
-        <%--LOGIN--%>
-        <form action="${pageContext.request.contextPath}/pages/index" method="get">
-            <input type="submit" value="<fmt:message key="ENTER" bundle="${lang}"/>">
-        </form>
-    </c:otherwise>
-</c:choose>
-<%--LOGIN--%>
-<%--<form action="${pageContext.request.contextPath}/pages/login" method="get">--%>
-<%--<input type="hidden" name="command" value="main_page"/>--%>
-<%--<input type="submit" value="<fmt:message key="LOGIN" bun    dle="${lang}"/>">--%>
-<%--</form>--%>
-<%--USER ROLE DEPENDANT--%>
-<c:if test="${sessionScope.user_role=='USER'}">
-    <%@include file="/WEB-INF/jsp/layout/menu/user_menu.jsp" %>
-</c:if>
-<c:if test="${sessionScope.user_role=='ADMIN'}">
-    <%@include file="/WEB-INF/jsp/layout/menu/admin_menu.jsp" %>
-</c:if>
-<br>
-<fmt:message key="HELLO" bundle="${lang}"/>
-<c:out value=" "/><fmt:message key="${sessionScope.user_role}" bundle="${lang}"/>
-<c:if test="${not empty sessionScope.user_name}">
-    <c:out value="(${sessionScope.user_name})"/>
-</c:if>
-<hr>
-<%--SHOW ERROR MESSAGE IF EXISTS--%>
-<c:if test="${not empty sessionScope.error}">
-    <fmt:message key="${sessionScope.error}" bundle="${lang}"/>
-    <c:remove var="error" scope="session"/>
-</c:if>
-<hr>
+        </ul>
+    </div>
+</nav>

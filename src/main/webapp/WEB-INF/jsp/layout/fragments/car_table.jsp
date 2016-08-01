@@ -1,4 +1,4 @@
-<table>
+<table class="table  table-condensed" >
     <th><fmt:message key="BRAND" bundle="${lang}"/></th>
     <th><fmt:message key="MODEL" bundle="${lang}"/></th>
     <th><fmt:message key="YEAR" bundle="${lang}"/></th>
@@ -10,7 +10,7 @@
     <th><fmt:message key="FUEL" bundle="${lang}"/></th>
     <th><fmt:message key="PRICE" bundle="${lang}"/></th>
     <th><fmt:message key="ORDER" bundle="${lang}"/></th>
-    <c:forEach var="car" items="${sessionScope.cars}">
+    <c:forEach var="car" items="${requestScope.cars}">
         <tr>
             <td>${car.model.brand.brandAbbr}</td>
             <td>${car.model.modelName}</td>
@@ -27,18 +27,25 @@
                       method="get">
                     <input type="hidden" name="car_id" value="${car.idCar}"/>
                     <input type="hidden" name="start_date"
-                           value="${sessionScope.car_filter.selectedStartDate}"/>
+                           value="${requestScope.car_filter.selectedStartDate}"/>
                     <input type="hidden" name="end_date"
-                           value="${sessionScope.car_filter.selectedEndDate}"/>
-                    <c:if test="${sessionScope.user_role eq 'GUEST'}">
-                        <a href="${pageContext.request.contextPath}/pages/index">
-                            <fmt:message key="ENTER" bundle="${lang}"/></a>
-                        <a href="${pageContext.request.contextPath}/pages/register">
-                            <fmt:message key="REGISTER" bundle="${lang}"/></a>
-                    </c:if>
-                    <c:if test="${sessionScope.user_role eq 'USER'}">
-                        <input type="submit" value="<fmt:message key="ORDER" bundle="${lang}"/>">
-                    </c:if>
+                           value="${requestScope.car_filter.selectedEndDate}"/>
+                    <div class="form-group">
+
+                        <c:if test="${sessionScope.user_role eq 'GUEST'}">
+                            <a class="btn btn-primary btn-sm"
+                               href="${pageContext.request.contextPath}/pages/index">
+                                <fmt:message key="ENTER" bundle="${lang}"/></a>
+                            <a class="btn btn-primary btn-sm"
+                               href="${pageContext.request.contextPath}/pages/guest_register">
+                                <fmt:message key="REGISTER" bundle="${lang}"/></a>
+                        </c:if>
+                        <c:if test="${sessionScope.user_role eq 'USER'}">
+                            <button type="submit" class="btn btn-primary"><fmt:message key="ORDER" bundle="${lang}"/></button>
+                            <%--<input type="submit"--%>
+                                   <%--value="<fmt:message key="ORDER" bundle="${lang}"/>">--%>
+                        </c:if>
+                    </div>
                 </form>
             </td>
         </tr>
