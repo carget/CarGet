@@ -1,6 +1,7 @@
 package ua.mishkyroff.carget.filters;
 
-import ua.mishkyroff.carget.commands.Command;
+import ua.mishkyroff.carget.commands.Messages;
+import ua.mishkyroff.carget.controllers.JspPages;
 import ua.mishkyroff.carget.controllers.SessionAttributes;
 import ua.mishkyroff.carget.entities.UserRole;
 
@@ -38,10 +39,11 @@ public class SecurityFilter implements Filter {
 
         //check CSRF token only for POST requests
         if (request.getMethod().toLowerCase().equals("post")) {
-            Long token = Long.valueOf(request.getParameter("token"));
-            if (!token.equals(hs.getAttribute("csrfToken"))) {
+            String token = request.getParameter("token");
+            if (token == null || !Long.valueOf(token).equals(hs.getAttribute(
+                    SessionAttributes.CSRF_TOKEN.toString()))) {
                 //security error
-                response.sendRedirect(Command.INDEX);
+                response.sendRedirect(JspPages.INDEX.getView());
                 hs.invalidate();
                 return;
             }
@@ -53,18 +55,19 @@ public class SecurityFilter implements Filter {
         String pathInfo = request.getPathInfo();
         if (pathInfo != null) {
             if (userRole != UserRole.ADMIN && pathInfo.startsWith("/admin")) {
-                hs.setAttribute("error" , Command.ERROR_YOU_MUST_BE_ADMIN);
-                response.sendRedirect(Command.ERROR_USER_ROLE);
+                hs.setAttribute(SessionAttributes.MESSAGE.toString(), Messages
+                        .ERROR_YOU_MUST_BE_ADMIN);
+                response.sendRedirect(Messages.ERROR_USER_ROLE);
                 return;
             }
             if (userRole != UserRole.USER && pathInfo.startsWith("/user")) {
-                hs.setAttribute("error" , Command.ERROR_YOU_MUST_BE_USER);
-                response.sendRedirect(Command.ERROR_USER_ROLE);
+                hs.setAttribute(SessionAttributes.MESSAGE.toString(), Messages.ERROR_YOU_MUST_BE_USER);
+                response.sendRedirect(Messages.ERROR_USER_ROLE);
                 return;
             }
             if (userRole != UserRole.GUEST && pathInfo.startsWith("/guest")) {
-                hs.setAttribute("error" , Command.ERROR_YOU_MUST_BE_GUEST);
-                response.sendRedirect(Command.ERROR_USER_ROLE);
+                hs.setAttribute(SessionAttributes.MESSAGE.toString(), Messages.ERROR_YOU_MUST_BE_GUEST);
+                response.sendRedirect(Messages.ERROR_USER_ROLE);
                 return;
             }
         }

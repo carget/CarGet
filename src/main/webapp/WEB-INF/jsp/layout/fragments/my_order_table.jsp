@@ -9,12 +9,13 @@
     <th><fmt:message key="RENT" bundle="${lang}"/></th>
     <th><fmt:message key="FINE" bundle="${lang}"/></th>
     <th><fmt:message key="STATUS" bundle="${lang}"/></th>
+    <th><fmt:message key="ACTION" bundle="${lang}"/></th>
     <c:forEach var="order" items="${requestScope.orders}">
         <tr>
             <td>${order.idOrder}</td>
             <td>
                 <a href="${pageContext.request.contextPath}/pages/car_info?car_id=${order.car.idCar}">
-                        ${order.car.model.modelName}
+                    <img src="${order.car.model.img}" height="128" />
                 </a>
             </td>
             <td>${order.user.firstName}</td>
@@ -25,6 +26,18 @@
             <td>${order.rent}</td>
             <td>${order.fine}</td>
             <td><fmt:message key="${order.status}" bundle="${lang}"/></td>
+            <td>
+                <c:if test="${order.status eq 'APPROVED'}">
+                    <%--SHOW PAY BUTTON--%>
+                    <form action="${pageContext.request.contextPath}/pages/user_payment_order"
+                          method="post">
+                        <mytag:csrfTag name="token"/>
+                        <input type="hidden" name="order_id" value="${order.idOrder}"/>
+                        <button type="submit" class="btn btn-primary">
+                            <fmt:message key="PAY" bundle="${lang}"/></button>
+                    </form>
+                </c:if>
+            </td>
         </tr>
     </c:forEach>
     <c:remove var="orders" scope="session"/>

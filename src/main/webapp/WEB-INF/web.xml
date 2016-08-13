@@ -29,7 +29,7 @@
     </servlet-mapping>
     
     <listener>
-        <listener-class>ua.mishkyroff.carget.listeners.DatabaseInitListener</listener-class>
+        <listener-class>ua.mishkyroff.carget.listeners.ContextListener</listener-class>
     </listener>
 
     <listener>

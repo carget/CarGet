@@ -1,5 +1,7 @@
 package ua.mishkyroff.carget.controllers;
 
+import ua.mishkyroff.carget.dao.DAOFactory;
+
 /**
  * Interface {@code IRequestWrapper} used for testing purposes
  * Used like facade for HttpServletRequest
@@ -30,4 +32,6 @@ public interface IRequestWrapper {
     void removeSessionAttribute(SessionAttributes key);
 
     String getHeader(String name);
+
+    DAOFactory getDAOFactory();
 }

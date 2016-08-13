@@ -8,17 +8,17 @@ import ua.mishkyroff.carget.dao.DAOFactory;
 import ua.mishkyroff.carget.entities.OrderStatus;
 
 /**
- * A command for process GET requests with "/admin_new_orders" uri
- * The command receives list of all new orders and forwards to corresponding .jsp file
+ * A command for process GET requests with "/admin_canceled_orders" uri
+ * The command gets list of canceled orders and forwards for corresponding .jsp file
  *
  * @author Anton Mishkyroff
  */
-public class NewOrdersCommand implements Command {
+public class CanceledOrdersCommand implements Command{
     @Override
     public JspPages execute(IRequestWrapper wrapper) {
         DAOFactory daoFactory = wrapper.getDAOFactory();
-        wrapper.setRequestAttribute(RequestAttributes.ORDERS, daoFactory.getOrdersDAO()
-                .getAllOrdersByStatus(OrderStatus.NEW));
-        return JspPages.ADMIN_NEW_ORDERS;
+        wrapper.setRequestAttribute(RequestAttributes.ORDERS,
+                daoFactory.getOrdersDAO().getAllOrdersByStatus(OrderStatus.CANCELED));
+        return JspPages.ADMIN_CANCELED_ORDERS;
     }
 }

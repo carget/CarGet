@@ -16,6 +16,26 @@ public class Model {
     private boolean automat;
     private double power;
     private boolean condition;
+    private String img;
+
+
+    public Model(Brand brand, String className, String modelName, int doorsQty, boolean automat,
+                 double power, boolean condition, String img) {
+        this.brand = brand;
+        this.className = className;
+        this.modelName = modelName;
+        this.doorsQty = doorsQty;
+        this.automat = automat;
+        this.power = power;
+        this.condition = condition;
+        this.img = img;
+    }
+
+    public Model(int idModel, Brand brand, String className, String modelName, int doorsQty, boolean automat,
+                 double power, boolean condition, String img) {
+        this(brand, className, modelName, doorsQty, automat, power, condition, img);
+        this.idModel = idModel;
+    }
 
     @Override
     public String toString() {
@@ -86,5 +106,14 @@ public class Model {
 
     public void setModelName(String modelName) {
         this.modelName = modelName;
+    }
+
+    public void setImg(String img) {
+
+        this.img = img == null ? "/res/no-image.png" : img;
+    }
+
+    public String getImg() {
+        return img;
     }
 }

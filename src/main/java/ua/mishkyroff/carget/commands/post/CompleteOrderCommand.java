@@ -3,6 +3,7 @@ package ua.mishkyroff.carget.commands.post;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.commands.Command;
+import ua.mishkyroff.carget.commands.Messages;
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
 import ua.mishkyroff.carget.controllers.JspPages;
 import ua.mishkyroff.carget.controllers.SessionAttributes;
@@ -28,15 +29,26 @@ public class CompleteOrderCommand implements Command {
         String fine = wrapper.getParameter("fine");
 
         if (orderId == null || fine == null) {
-            wrapper.setSessionAttribute(SessionAttributes.MESSAGE, ERROR_COMPLETING_ORDER);
+            wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_COMPLETING_ORDER);
             return JspPages.INDEX;
         }
         String comment = wrapper.getParameter("comment");
-        comment = comment == null ? "" : comment;
-        boolean orderCompleted = DAOFactory.getInstance().getOrdersDAO()
-                .setOrderStatusCommentFineById(Integer.valueOf(orderId), OrderStatus.COMPLETED, comment, Double.valueOf(fine));
-        LOGGER.debug(" order completed = " + orderCompleted);
-        //TODO refresh orders object
-        return JspPages.ADMIN_COMPLETED_ORDERS;
+        comment = (comment == null) ? "" : comment;
+        Integer orderIdInt = Integer.parseInt(orderId);
+        DAOFactory daoFactory = wrapper.getDAOFactory();
+        OrderStatus orderStatus = daoFactory.getOrdersDAO().getOrderStatusById(orderIdInt);
+        if (orderStatus == OrderStatus.PAID) {
+            if (daoFactory.getOrdersDAO()
+                    .setOrderStatusCommentFineById(Integer.valueOf(orderId), OrderStatus.COMPLETED,
+                            comment, Double.valueOf(fine))) {
+                LOGGER.debug("Order completed!");
+                return JspPages.ADMIN_COMPLETED_ORDERS;
+            }
+
+        }
+        wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_COMPLETING_ORDER);
+        LOGGER.debug("Order not completed!");
+        return JspPages.INDEX;
+
     }
 }

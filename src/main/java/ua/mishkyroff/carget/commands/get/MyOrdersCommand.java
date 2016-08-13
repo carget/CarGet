@@ -17,7 +17,8 @@ import ua.mishkyroff.carget.dao.DAOFactory;
 public class MyOrdersCommand implements Command {
     @Override
     public JspPages execute(IRequestWrapper wrapper) {
-        wrapper.setRequestAttribute(RequestAttributes.ORDERS, DAOFactory.getInstance()
+        DAOFactory daoFactory = wrapper.getDAOFactory();
+        wrapper.setRequestAttribute(RequestAttributes.ORDERS, daoFactory
                 .getOrdersDAO().getAllOrdersByUserId
                         ((Integer) wrapper.getSessionAttribute(SessionAttributes.USER_ID)));
         return JspPages.USER_MY_ORDERS;

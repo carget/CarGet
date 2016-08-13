@@ -6,5 +6,5 @@ package ua.mishkyroff.carget.entities;
  * @author Anton Mishkyroff
  */
 public enum OrderStatus {
-    NEW, APPROVED, REJECTED, COMPLETED
+    NEW, APPROVED, REJECTED, COMPLETED, CANCELED, PAID
 }

@@ -11,7 +11,8 @@ public enum SessionAttributes {
     USER_ID("user_id"),
     USER_NAME("user_name"),
     USER_ROLE("user_role"),
-    MESSAGE("error");
+    MESSAGE("error"),
+    CSRF_TOKEN("csrfToken");
 
     private String name;
 

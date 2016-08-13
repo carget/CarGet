@@ -1,4 +1,5 @@
 <table class="table">
+    <th><fmt:message key="CAR" bundle="${lang}"/></th>
     <th><fmt:message key="BRAND" bundle="${lang}"/></th>
     <th><fmt:message key="MODEL" bundle="${lang}"/></th>
     <th><fmt:message key="YEAR" bundle="${lang}"/></th>
@@ -10,6 +11,11 @@
     <th><fmt:message key="FUEL" bundle="${lang}"/></th>
     <th><fmt:message key="PRICE" bundle="${lang}"/></th>
     <tr>
+        <td>
+            <a href="${pageContext.request.contextPath}/pages/car_info?car_id=${requestScope.car.idCar}">
+                <img src="${requestScope.car.model.img}" height="128" />
+            </a>
+        </td>
         <td>${requestScope.car.model.brand.brandAbbr}</td>
         <td>${requestScope.car.model.modelName}</td>
         <td>${requestScope.car.year}</td>

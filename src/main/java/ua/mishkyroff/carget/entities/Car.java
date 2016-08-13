@@ -8,10 +8,22 @@ package ua.mishkyroff.carget.entities;
  */
 public class Car {
     private int idCar;
-    private Model model;
-    private int year;
-    private FuelType fuelType;
+    private final Model model;
+    private final int year;
+    private final FuelType fuelType;
     private double pricePerDay;
+
+    public Car(Model model, int year, FuelType fuelType, double pricePerDay) {
+        this.model = model;
+        this.year = year;
+        this.fuelType = fuelType;
+        this.pricePerDay = pricePerDay;
+    }
+
+    public Car(int idCar, Model model, int year, FuelType fuelType, double pricePerDay) {
+        this(model, year, fuelType, pricePerDay);
+        this.idCar =idCar;
+    }
 
     @Override
     public String toString() {
@@ -31,24 +43,12 @@ public class Car {
         return model;
     }
 
-    public void setModel(Model model) {
-        this.model = model;
-    }
-
     public int getYear() {
         return year;
     }
 
-    public void setYear(int year) {
-        this.year = year;
-    }
-
     public FuelType getFuelType() {
         return fuelType;
-    }
-
-    public void setFuelType(FuelType fuelType) {
-        this.fuelType = fuelType;
     }
 
     public double getPricePerDay() {

@@ -5,6 +5,7 @@ package ua.mishkyroff.carget.controllers;
  *
  *  @author Anton Mishkyroff
  */
+//TODO think about better name or replace with HashMap and properties file
 public enum JspPages {
     INDEX("/WEB-INF/jsp/index.jsp"),
     GUEST_REGISTER("/WEB-INF/jsp/register.jsp"),
@@ -22,7 +23,9 @@ public enum JspPages {
     ADMIN_NEW_ORDERS("/WEB-INF/jsp/admin/new_orders.jsp"),
     ADMIN_APPROVED_ORDERS("/WEB-INF/jsp/admin/approved_orders.jsp"),
     ADMIN_COMPLETED_ORDERS("/WEB-INF/jsp/admin/completed_orders.jsp"),
+    ADMIN_PAID_ORDERS("/WEB-INF/jsp/admin/paid_orders.jsp"),
     ADMIN_REJECTED_ORDERS("/WEB-INF/jsp/admin/rejected_orders.jsp"),
+    ADMIN_CANCELED_ORDERS("/WEB-INF/jsp/admin/canceled_orders.jsp"),
     ADMIN_RETURN_CAR("/WEB-INF/jsp/admin/return_car.jsp");
 
     private String path;
@@ -39,8 +42,7 @@ public enum JspPages {
     }
 
 
-    @Override
-    public String toString() {
+    public String getView() {
         return super.toString().toLowerCase();
     }
 }

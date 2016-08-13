@@ -8,35 +8,38 @@ package ua.mishkyroff.carget.entities;
  */
 public class User {
     private int id;
-    private String firstName;
-    private String lastName;
-    private String passport;
-    private String email;
-    private Boolean isAdmin;
+    private final String firstName;
+    private final String lastName;
+    private final String passport;
+    private final String email;
     private String password;
+    private Boolean isAdmin;
+
+    public User(String firstName, String lastName, String passport, String email, Boolean isAdmin, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.passport = passport;
+        this.email = email;
+        this.isAdmin = isAdmin;
+        this.password = password;
+    }
+
+    public User(int id, String firstName, String lastName, String passport, String email, Boolean
+            isAdmin, String password) {
+        this(firstName, lastName, passport, email, isAdmin, password);
+        this.id = id;
+    }
 
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getPassport() {
         return passport;
     }
 
-    public void setPassport(String passport) {
-        this.passport = passport;
-    }
-
     public Boolean getAdmin() {
         return isAdmin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
     }
 
     public int getId() {
@@ -50,24 +53,21 @@ public class User {
     public String getEmail() {
         return email;
     }
-    
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getFirstName() {
         return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
     }
 
     public String getPassword() {
         return password;
     }
 
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

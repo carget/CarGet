@@ -17,7 +17,7 @@
             <td>${order.idOrder}</td>
             <td>
                 <a href="${pageContext.request.contextPath}/pages/car_info?car_id=${order.car.idCar}">
-                        ${order.car.model.modelName}
+                    <img src="${order.car.model.img}" height="128" />
                 </a>
             </td>
             <td>${order.user.firstName}</td>
@@ -33,24 +33,26 @@
                       method="post">
                     <input type="hidden" name="order_id" value="${order.idOrder}"/>
                     <mytag:csrfTag name="token"/>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary btn-sm">
                         <fmt:message key="APPROVE" bundle="${lang}"/>
                     </button>
                         <%--<input type="submit" name="command" value="<fmt:message key="APPROVE" bundle="${lang}"/>"/>--%>
                 </form>
             </td>
             <td colspan="2">
-                <form action="${pageContext.request.contextPath}/pages/admin_reject_order"
-                      method="post">
+                <form action="${pageContext.request.contextPath}/pages/admin_reject_order" method="post">
                     <input type="hidden" name="order_id" value="${order.idOrder}"/>
                     <mytag:csrfTag name="token"/>
-                    <div class="form-group">
-                        <input type="text" name="reason" class="form-control" value="" required/>
+                    <div class="row">
+                        <div class="form-group col-xs-5">
+                            <input type="text" name="reason" class="form-control" value="" required/>
+                        </div>
+                        <div class="form-group col-xs-1">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <fmt:message key="REJECT" bundle="${lang}"/>
+                            </button>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">
-                        <fmt:message key="REJECT" bundle="${lang}"/>
-                    </button>
-                        <%--<input type="submit" name="command" value="<fmt:message key="REJECT" bundle="${lang}"/>"/>--%>
                 </form>
             </td>
         </tr>

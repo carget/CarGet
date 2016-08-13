@@ -11,10 +11,21 @@ public class Brand {
     private String brandAbbr;
     private String fullName;
 
+    public Brand(String brandAbbr, String fullName) {
+        this.brandAbbr = brandAbbr;
+        this.fullName = fullName;
+    }
+
+    public Brand(int idBrand, String brandAbbr, String fullName) {
+        this(brandAbbr, fullName);
+        this.idBrand = idBrand;
+    }
+
     @Override
     public String toString() {
         return " BRAND (idBrand=" + idBrand + " brandShort=" + brandAbbr + " brandFull=" + fullName + ")";
     }
+
 
     public Integer getIdBrand() {
         return idBrand;

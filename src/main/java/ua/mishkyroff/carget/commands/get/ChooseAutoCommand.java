@@ -2,12 +2,12 @@ package ua.mishkyroff.carget.commands.get;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ua.mishkyroff.carget.commands.CarFilter;
 import ua.mishkyroff.carget.commands.Command;
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
 import ua.mishkyroff.carget.controllers.JspPages;
 import ua.mishkyroff.carget.controllers.RequestAttributes;
 import ua.mishkyroff.carget.controllers.SessionAttributes;
-import ua.mishkyroff.carget.dao.CarFilter;
 import ua.mishkyroff.carget.dao.DAOFactory;
 import ua.mishkyroff.carget.entities.Car;
 
@@ -42,13 +42,16 @@ public class ChooseAutoCommand implements Command {
         carFilter.setSelectedCondition(wrapper.getParameter("condition"));
         carFilter.setSelectedStartDate(wrapper.getParameter("start_date"));
         carFilter.setSelectedEndDate(wrapper.getParameter("end_date"));
-        if (carFilter.haveUnreadedError()) {
+        carFilter.setSelectedLowPrice(wrapper.getParameter("low_price"));
+        carFilter.setSelectedHiPrice(wrapper.getParameter("hi_price"));
+        if (carFilter.haveUnreadError()) {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, carFilter.getError());
         }
 
         //update filter and filtered cars objects
         wrapper.setRequestAttribute(RequestAttributes.CAR_FILTER, carFilter);
-        List<Car> cars = DAOFactory.getInstance().getCarsDAO().filterAndGetCars(carFilter);
+        DAOFactory daoFactory = wrapper.getDAOFactory();
+        List<Car> cars = daoFactory.getCarsDAO().filterAndGetCars(carFilter);
         wrapper.setRequestAttribute(RequestAttributes.CARS, cars);
         return JspPages.CHOOSE_AUTO;
     }

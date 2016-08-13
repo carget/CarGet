@@ -14,17 +14,17 @@ import java.util.Set;
 
 
 /**
- * Singleton class {@code DBInitializationDAO} used for checking DB structure
+ * Singleton class {@code CheckDBDAO} used for checking DB structure
  * If some required tables are missing throw exception
  *
  * @author Anton Mishkyroff
  * @throws DBStructureError
  */
-public class DBInitializationDAO {
+public class CheckDBDAO {
     private final DataSource ds;
     private static final Logger LOGGER = LogManager.getLogger("toConsole");
 
-    DBInitializationDAO(DataSource ds) {
+    CheckDBDAO(DataSource ds) {
         this.ds = ds;
     }
 
@@ -32,7 +32,7 @@ public class DBInitializationDAO {
      * Method checks and compare required and real table names in database
      * And throws DBStructureError if some or all tables are missing
      *
-     * @throws DBStructureError - thrown if some or all table are missing in database
+     * @throws DBStructureError - thrown if some or all tables are missing in database
      */
     public void initAndCheckDB() throws SQLException, DBStructureError {
         Connection connection = ds.getConnection();

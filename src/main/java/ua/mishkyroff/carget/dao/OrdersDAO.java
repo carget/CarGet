@@ -5,13 +5,8 @@ import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.entities.*;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -53,13 +48,13 @@ public class OrdersDAO {
     public boolean addOrder(Order order) {
         try (Connection conn = ds.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(BUNDLE.getString("INSERT_ORDER"));
-            ps.setString(1, String.valueOf(order.getUser().getId()));
-            ps.setString(2, String.valueOf(order.getCar().getIdCar()));
-            ps.setString(3, toMySQLDate(order.getStartDate()));
-            ps.setString(4, toMySQLDate(order.getEndDate()));
+            ps.setInt(1, order.getUser().getId());
+            ps.setInt(2, order.getCar().getIdCar());
+            ps.setDate(3, Date.valueOf(order.getStartDate()));
+            ps.setDate(4, Date.valueOf(order.getEndDate()));
             ps.setString(5, order.getComment());
-            ps.setString(6, String.valueOf(order.getRent()));
-            ps.setString(7, String.valueOf(order.getFine()));
+            ps.setDouble(6, order.getRent());
+            ps.setDouble(7, order.getFine());
             ps.setString(8, order.getStatus().toString());
             LOGGER.debug(ps);
             ps.execute();
@@ -68,10 +63,6 @@ public class OrdersDAO {
             return false;
         }
         return true;
-    }
-
-    private String toMySQLDate(Date date) {
-        return new SimpleDateFormat("yyyy-MM-dd").format(date);
     }
 
     public List<Order> getAllOrdersByStatus(OrderStatus status) {
@@ -94,42 +85,49 @@ public class OrdersDAO {
     }
 
     private Order createOrderFromParameters(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getInt("users.user_id"));
-        user.setFirstName(rs.getString("users.first_name"));
-        user.setLastName(rs.getString("users.last_name"));
-        user.setEmail(rs.getString("users.email"));
-        user.setPassport(rs.getString("users.passport"));
-        user.setAdmin(rs.getBoolean("users.is_admin"));
-        Car car = new Car();
-        Model model = new Model();
-        Brand brand = new Brand();
-        brand.setIdBrand(rs.getInt("brands.brand_id"));
-        brand.setBrandAbbr(rs.getString("brands.brand_name"));
-        brand.setFullName(rs.getString("brands.brand_full_name"));
-        model.setBrand(brand);
-        model.setIdModel(rs.getInt("models.model_id"));
-        model.setClassName(rs.getString("models.class_name"));
-        model.setModelName(rs.getString("models.model_name"));
-        model.setDoorsQty(rs.getInt("models.doors_qty"));
-        model.setAutomat(rs.getBoolean("models.automat"));
-        model.setPower(rs.getDouble("models.power"));
-        model.setCondition(rs.getBoolean("models.conditioning"));
-        car.setIdCar(rs.getInt("cars.car_id"));
-        car.setModel(model);
-        car.setYear(rs.getInt("cars.year"));
-        car.setFuelType(FuelType.valueOf(rs.getString("cars.fuel_type").toUpperCase()));
-        car.setPricePerDay(rs.getDouble("cars.price_day"));
-        Order order = new Order();
-        order.setIdOrder(rs.getInt("orders.order_id"));
-        order.setUser(user);
-        order.setCar(car);
-        order.setStartDate(rs.getDate("orders.date_start"));
-        order.setEndDate(rs.getDate("orders.date_end"));
-        order.setComment(rs.getString("orders.comment"));
-        order.setRent(rs.getDouble("orders.rent"));
-        order.setFine(rs.getDouble("orders.fine"));
-        order.setStatus(OrderStatus.valueOf(rs.getString("orders.status").toUpperCase()));
+        User user = new User(
+                rs.getInt("users.user_id"),
+                rs.getString("users.first_name"),
+                rs.getString("users.last_name"),
+                rs.getString("users.passport"),
+                rs.getString("users.email"),
+                rs.getBoolean("users.is_admin"),
+                rs.getString("users.password")
+        );
+        Brand brand = new Brand(
+                rs.getInt("brands.brand_id"),
+                rs.getString("brands.brand_name"),
+                rs.getString("brands.brand_full_name")
+        );
+        Model model = new Model(
+                rs.getInt("models.model_id"),
+                brand,
+                rs.getString("models.class_name"),
+                rs.getString("models.model_name"),
+                rs.getInt("models.doors_qty"),
+                rs.getBoolean("models.automat"),
+                rs.getDouble("models.power"),
+                rs.getBoolean("models.conditioning"),
+                rs.getString("models.img")
+        );
+        Car car = new Car(
+                rs.getInt("cars.car_id"),
+                model,
+                rs.getInt("cars.year"),
+                FuelType.valueOf(rs.getString("cars.fuel_type").toUpperCase()),
+                rs.getDouble("cars.price_day")
+        );
+        Order order = new Order(
+                rs.getInt("orders.order_id"),
+                user,
+                car,
+                rs.getDate("orders.date_start").toLocalDate(),
+                rs.getDate("orders.date_end").toLocalDate(),
+                rs.getString("orders.comment"),
+                rs.getDouble("orders.rent"),
+                rs.getDouble("orders.fine"),
+                OrderStatus.valueOf(rs.getString("orders.status").toUpperCase())
+        );
         return order;
     }
 
@@ -159,11 +157,9 @@ public class OrdersDAO {
         }
     }
 
-    public boolean setOrderStatusCommentFineById(Integer orderId, OrderStatus status, String comment,
-                                                 Double fine) {
+    public boolean setOrderStatusCommentFineById(Integer orderId, OrderStatus status, String comment, Double fine) {
         try (Connection connection = ds.getConnection();
-             PreparedStatement statement = connection.prepareStatement(BUNDLE.getString
-                     ("SET_ORDER_STATUS_COMMENT_FINE_BY_ID"))) {
+             PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("SET_ORDER_STATUS_COMMENT_FINE_BY_ID"))) {
             statement.setString(1, status.toString().toLowerCase());
             statement.setString(2, comment);
             statement.setDouble(3, fine);
@@ -178,8 +174,7 @@ public class OrdersDAO {
 
     public Order getOrderById(Integer orderId) {
         try (Connection connection = ds.getConnection();
-             PreparedStatement statement = connection.prepareStatement(BUNDLE.getString
-                     ("GET_ORDER_BY_ID"))) {
+             PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("GET_ORDER_BY_ID"))) {
 
             statement.setInt(1, orderId);
             ResultSet rs = statement.executeQuery();
@@ -190,6 +185,15 @@ public class OrdersDAO {
             }
         } catch (SQLException e) {
             LOGGER.error("Error by getting order by id");
+            return null;
+        }
+    }
+
+    public OrderStatus getOrderStatusById(Integer orderId) {
+        Order order = getOrderById(orderId);
+        if (order != null) {
+            return order.getStatus();
+        } else {
             return null;
         }
     }

@@ -34,10 +34,11 @@ public class BrandsDAO {
              Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(bundle.getString("GET_ALL_BRANDS"));
             while (rs.next()) {
-                Brand brand = new Brand();
-                brand.setIdBrand(rs.getInt("brand_id"));
-                brand.setBrandAbbr(rs.getString("brand_name"));
-                brand.setFullName(rs.getString("brand_full_name"));
+                Brand brand = new Brand(
+                        rs.getInt("brand_id"),
+                        rs.getString("brand_name"),
+                        rs.getString("brand_full_name")
+                );
                 brands.add(brand);
             }
         } catch (SQLException e) {

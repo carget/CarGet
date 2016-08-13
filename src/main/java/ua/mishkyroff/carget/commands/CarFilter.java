@@ -1,15 +1,12 @@
-package ua.mishkyroff.carget.dao;
+package ua.mishkyroff.carget.commands;
 
+import ua.mishkyroff.carget.dao.CarsDAO;
+import ua.mishkyroff.carget.dao.DAOFactory;
 import ua.mishkyroff.carget.entities.Brand;
 import ua.mishkyroff.carget.entities.FuelType;
-import ua.mishkyroff.carget.utils.DateUtils;
 
-import java.sql.Date;
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.List;
-
-import static ua.mishkyroff.carget.commands.Command.ERROR_END_DATE_MUST_BE_GT_START;
-import static ua.mishkyroff.carget.commands.Command.ERROR_START_DATE_MUST_BE_GE_TODAY;
 
 /**
  * Class {@code CarFilter} used to store and validate filter's parameters
@@ -25,35 +22,36 @@ public class CarFilter {
     private Integer selectedCondition;
     private Integer selectedAutomat;
     private FuelType selectedFuelType;
-    private Date selectedStartDate;
-    private Date selectedEndDate;
+    private LocalDate selectedStartDate;
+    private LocalDate selectedEndDate;
     private List<FuelType> fuelTypes;
     private String error;
-    private boolean haveUnreadedError;
+    private boolean haveUnreadError;
+    private double selectedLowPrice;
+    private double selectedHiPrice;
 
     /**
-     * Create default parameters for car filtration
+     * Create filter object with default parameters for car filtration
      */
     public CarFilter() {
         //default filtering params
         this.brands = DAOFactory.getInstance().getBrandsDAO().getAllBrands();
         this.years = DAOFactory.getInstance().getCarsDAO().getAllYears();
+        // '-1' value means any filtering value
         this.selectedBrandId = -1;
         this.selectedYear = -1;
         this.selectedCondition = -1;
         this.selectedAutomat = -1;
         this.selectedFuelType = FuelType.ALL;
-        //set today
-        Calendar calendar = Calendar.getInstance();
-        Date today = new Date(calendar.getTimeInMillis());
+        LocalDate today = LocalDate.now(); //set today
         this.selectedStartDate = today;
-        //today + 1
-        calendar.setTime(today);
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        this.selectedEndDate = new Date(calendar.getTimeInMillis());
+        this.selectedEndDate = today.plusDays(1);
         this.fuelTypes = DAOFactory.getInstance().getCarsDAO().getAllFuelTypes();
         this.error = "";
-        this.haveUnreadedError = false;
+        this.haveUnreadError = false;
+        this.selectedLowPrice = 0d;
+        this.selectedHiPrice = 2000d;
+
     }
 
     public List<Brand> getBrands() {
@@ -114,7 +112,7 @@ public class CarFilter {
         }
     }
 
-    public Date getSelectedStartDate() {
+    public LocalDate getSelectedStartDate() {
         return selectedStartDate;
     }
 
@@ -127,13 +125,10 @@ public class CarFilter {
     public void setSelectedStartDate(String startDateString) {
         // IF start date >= today THEN set Error and set 'today' as correct start date
         if (startDateString != null) {
-            Date today = DateUtils.getTodayWithoutMillis();
-            Date startDate = Date.valueOf(startDateString);
+            LocalDate today = LocalDate.now();
+            LocalDate startDate = LocalDate.parse(startDateString);
             if (startDate.compareTo(today) < 0) {
-                if (!haveUnreadedError) {
-                    error = ERROR_START_DATE_MUST_BE_GE_TODAY;
-                    haveUnreadedError = true;
-                }
+                setErrorMessage(Messages.ERROR_START_DATE_MUST_BE_GE_TODAY);
                 this.selectedStartDate = today;
             } else {
                 this.selectedStartDate = startDate;
@@ -141,7 +136,7 @@ public class CarFilter {
         }
     }
 
-    public Date getSelectedEndDate() {
+    public LocalDate getSelectedEndDate() {
         return selectedEndDate;
     }
 
@@ -154,14 +149,11 @@ public class CarFilter {
     public void setSelectedEndDate(String endDateString) {
         // IF end date <= start date THEN set Error and correct date
         if (endDateString != null) {
-            Date endDate = Date.valueOf(endDateString);
+            LocalDate endDate = LocalDate.parse(endDateString);
             //check if end > start
             if (selectedStartDate.compareTo(endDate) >= 0) {
-                if (!haveUnreadedError) {
-                    error = ERROR_END_DATE_MUST_BE_GT_START;
-                    haveUnreadedError = true;
-                }
-                this.selectedEndDate = DateUtils.addOneDay(selectedStartDate);
+                setErrorMessage(Messages.ERROR_END_DATE_MUST_BE_GT_START);
+                this.selectedEndDate = selectedStartDate.plusDays(1);
             } else {
                 this.selectedEndDate = endDate;
             }
@@ -174,10 +166,11 @@ public class CarFilter {
 
     /**
      * Gets error message and reset error flag
+     *
      * @return - error message
      */
     public String getError() {
-        haveUnreadedError = false;
+        haveUnreadError = false;
         return error;
     }
 
@@ -191,7 +184,45 @@ public class CarFilter {
      * @return - flag is true if unreaded error exist
      * @see #getError()
      */
-    public boolean haveUnreadedError() {
-        return haveUnreadedError;
+    public boolean haveUnreadError() {
+        return haveUnreadError;
+    }
+
+    public double getSelectedLowPrice() {
+        return selectedLowPrice;
+    }
+
+    public void setSelectedLowPrice(String selectedLowPrice) {
+        if (selectedLowPrice != null) {
+            this.selectedLowPrice = Double.parseDouble(selectedLowPrice);
+            this.selectedLowPrice = this.selectedLowPrice < 0 ? 0 : this.selectedLowPrice;
+        }
+
+    }
+
+    public double getSelectedHiPrice() {
+        return selectedHiPrice;
+    }
+
+    public void setSelectedHiPrice(String selectedHiPrice) {
+        if (selectedHiPrice != null) {
+            this.selectedHiPrice = Double.parseDouble(selectedHiPrice);
+            if (this.selectedHiPrice < selectedLowPrice) {
+                setErrorMessage(Messages.ERROR_HI_PRICE_MUST_BE_GE_LOW_PRICE);
+                this.selectedHiPrice = selectedLowPrice;
+            }
+        }
+    }
+
+    /**
+     * Helper method to set filter error message
+     *
+     * @param message - error message
+     */
+    private void setErrorMessage(String message) {
+        if (!haveUnreadError) {
+            error = message;
+            haveUnreadError = true;
+        }
     }
 }

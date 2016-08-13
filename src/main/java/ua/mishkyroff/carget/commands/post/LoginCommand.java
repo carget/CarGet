@@ -3,6 +3,7 @@ package ua.mishkyroff.carget.commands.post;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.commands.Command;
+import ua.mishkyroff.carget.commands.Messages;
 import ua.mishkyroff.carget.controllers.IRequestWrapper;
 import ua.mishkyroff.carget.controllers.JspPages;
 import ua.mishkyroff.carget.controllers.SessionAttributes;
@@ -29,11 +30,12 @@ public class LoginCommand implements Command {
 
         String email = wrapper.getParameter("email");
         String password = wrapper.getParameter("password");
-        if (email==null || password==null) {
-            wrapper.setSessionAttribute(SessionAttributes.MESSAGE, ERROR_INVALID_USER);
+        if (email == null || password == null) {
+            wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_INVALID_USER);
             return JspPages.INDEX;
         }
-        UsersDAO userDao = DAOFactory.getInstance().getUsersDAO();
+        DAOFactory daoFactory = wrapper.getDAOFactory();
+        UsersDAO userDao = daoFactory.getUsersDAO();
         User user = userDao.getUserByEmail(email);
         if (user != null && password.equals(user.getPassword())) { //valid user
             LOGGER.debug("Valid user");
@@ -41,11 +43,9 @@ public class LoginCommand implements Command {
                     (user.getAdmin()) ? UserRole.ADMIN : UserRole.USER);
             wrapper.setSessionAttribute(SessionAttributes.USER_NAME,
                     user.getFirstName() + " " + user.getLastName());
-            LOGGER.debug("User first name " + user.getFirstName() + " user last name= " + user.getLastName() );
             wrapper.setSessionAttribute(SessionAttributes.USER_ID, user.getId());
         } else { //invalid user set error message
-            LOGGER.debug("Invalid user");
-            wrapper.setSessionAttribute(SessionAttributes.MESSAGE, ERROR_INVALID_USER);
+            wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_INVALID_USER);
         }
         return JspPages.INDEX;
     }

@@ -1,4 +1,5 @@
-<table class="table  table-condensed" >
+<table class="table  table-condensed">
+    <th><fmt:message key="PHOTO" bundle="${lang}"/></th>
     <th><fmt:message key="BRAND" bundle="${lang}"/></th>
     <th><fmt:message key="MODEL" bundle="${lang}"/></th>
     <th><fmt:message key="YEAR" bundle="${lang}"/></th>
@@ -12,6 +13,11 @@
     <th><fmt:message key="ORDER" bundle="${lang}"/></th>
     <c:forEach var="car" items="${requestScope.cars}">
         <tr>
+            <td>
+                <a href="${pageContext.request.contextPath}/pages/car_info?car_id=${car.idCar}">
+                    <img src="${car.model.img}" height="128" />
+                </a>
+            </td>
             <td>${car.model.brand.brandAbbr}</td>
             <td>${car.model.modelName}</td>
             <td>${car.year}</td>
@@ -41,9 +47,10 @@
                                 <fmt:message key="REGISTER" bundle="${lang}"/></a>
                         </c:if>
                         <c:if test="${sessionScope.user_role eq 'USER'}">
-                            <button type="submit" class="btn btn-primary"><fmt:message key="ORDER" bundle="${lang}"/></button>
+                            <button type="submit" class="btn btn-primary"><fmt:message key="ORDER"
+                                                                                       bundle="${lang}"/></button>
                             <%--<input type="submit"--%>
-                                   <%--value="<fmt:message key="ORDER" bundle="${lang}"/>">--%>
+                            <%--value="<fmt:message key="ORDER" bundle="${lang}"/>">--%>
                         </c:if>
                     </div>
                 </form>

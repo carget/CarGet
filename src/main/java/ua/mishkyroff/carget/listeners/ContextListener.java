@@ -10,12 +10,13 @@ import javax.servlet.ServletContextListener;
 import java.sql.SQLException;
 
 /**
- * Class {@code DatabaseInitListener} checks DB structure and initialize DataSource object
+ * Class {@code ContextListener} checks DB structure and initialize DataSource object
  * If some required tables are missing throw exception
+ * It also saves DAOFactory instance to ServletContext scope
  *
  * @author Anton Mishkyroff
  */
-public class DatabaseInitListener implements ServletContextListener {
+public class ContextListener implements ServletContextListener {
 
     private static final Logger LOGGER = LogManager.getLogger("toConsole");
     private static final Logger LOGGER_FILE = LogManager.getLogger("toFile");
@@ -27,7 +28,9 @@ public class DatabaseInitListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
         try {
-             DAOFactory.getInstance().getInitDBDAO().initAndCheckDB();
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            daoFactory.getInitDBDAO().initAndCheckDB();
+            servletContextEvent.getServletContext().setAttribute("DAOFactory", daoFactory);
         } catch (SQLException e) {
             LOGGER.error("SQL error during DB initialization " + e.getMessage());
         } catch (DBStructureError dbStructureError) {

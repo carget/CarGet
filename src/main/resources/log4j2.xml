@@ -2,7 +2,7 @@
 <Configuration status="error" strict="true" name="XMLConfigTwoAppender"
                monitorInterval="5">
     <Properties>
-        <Property name="filename">logs/test.log</Property>
+        <Property name="filename">logs/log.log</Property>
     </Properties>
     <Filter type="ThresholdFilter" level="trace"/>
     <Appenders>

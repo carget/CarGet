@@ -1,6 +1,8 @@
 package ua.mishkyroff.carget.controllers;
 
 
+import ua.mishkyroff.carget.dao.DAOFactory;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -134,6 +136,16 @@ public class RequestWrapper implements IRequestWrapper {
     @Override
     public String getHeader(String name) {
         return request.getHeader(name);
+    }
+
+    /**
+     * Retrieves DAOFactory instance from ServletContext scope
+     *
+     * @return - DAOFactory instance
+     */
+    @Override
+    public DAOFactory getDAOFactory() {
+        return (DAOFactory) request.getServletContext().getAttribute("DAOFactory");
     }
 
 

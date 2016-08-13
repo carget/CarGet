@@ -14,7 +14,7 @@
             <td>${order.idOrder}</td>
             <td>
                 <a href="${pageContext.request.contextPath}/pages/car_info?car_id=${order.car.idCar}">
-                        ${order.car.model.modelName}
+                    <img src="${order.car.model.img}" height="128" />
                 </a>
             </td>
             <td>${order.user.firstName}</td>

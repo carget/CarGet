@@ -1,6 +1,6 @@
 package ua.mishkyroff.carget.entities;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 /**
  * A Order entity stores information about order
@@ -10,14 +10,30 @@ import java.sql.Date;
  */
 public class Order {
     private int idOrder;
-    private User user;
-    private Car car;
-    private Date startDate;
-    private Date endDate;
+    private final User user;
+    private final Car car;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
     private String comment;
-    private double rent;
+    private final double rent;
     private double fine;
     private OrderStatus status;
+
+    public Order(User user, Car car, LocalDate startDate, LocalDate endDate, String comment, double rent, double fine, OrderStatus status) {
+        this.user = user;
+        this.car = car;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.comment = comment;
+        this.rent = rent;
+        this.fine = fine;
+        this.status = status;
+    }
+
+    public Order(int idOrder, User user, Car car, LocalDate startDate, LocalDate endDate, String comment, double rent, double fine, OrderStatus status) {
+        this(user, car, startDate, endDate, comment, rent, fine, status);
+        this.idOrder = idOrder;
+    }
 
     @Override
     public String toString() {
@@ -38,32 +54,16 @@ public class Order {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Car getCar() {
         return car;
     }
 
-    public void setCar(Car car) {
-        this.car = car;
-    }
-
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public String getComment() {
@@ -76,10 +76,6 @@ public class Order {
 
     public double getRent() {
         return rent;
-    }
-
-    public void setRent(double rent) {
-        this.rent = rent;
     }
 
     public double getFine() {

@@ -2,9 +2,8 @@ package ua.mishkyroff.carget.controllers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ua.mishkyroff.carget.commands.ActionFactoryGet;
-import ua.mishkyroff.carget.commands.ActionFactoryPost;
 import ua.mishkyroff.carget.commands.Command;
+import ua.mishkyroff.carget.commands.CommandFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,17 +30,18 @@ public class MainServlet extends HttpServlet {
     /**
      * This method process all http post requests and always does redirect
      * to avoid "double submit problem"
+     * This behaviour also known as PRG (Post/Redirect/Get) pattern
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         IRequestWrapper wrapper = new RequestWrapper(request);
-        Command command = ActionFactoryPost.getInstance().getCommand(wrapper);
+        Command command = CommandFactory.getCommandFactoryPost().getCommand(wrapper);
         JspPages view = command.execute(wrapper);
         try {
-            LOGGER.debug("----POST Redirect to " + view);
-            response.sendRedirect(view.toString());
+            LOGGER.debug("-----POST----- REDIRECT to " + view);
+            response.sendRedirect(view.getView());
         } catch (IOException e) {
-            LOGGER.error("Error during processing POST request ", e.getMessage());
+            LOGGER.error("Error during processing POST request " + e.getMessage());
         }
     }
 
@@ -53,18 +53,18 @@ public class MainServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
         IRequestWrapper wrapper = new RequestWrapper(request);
-        Command command = ActionFactoryGet.getInstance().getCommand(wrapper);
+        Command command = CommandFactory.getCommandFactoryGet().getCommand(wrapper);
         JspPages view = command.execute(wrapper);
         String pathInfo = wrapper.getPathInfo();
         pathInfo = (pathInfo == null || pathInfo.equals("/")) ? "/index" : pathInfo;
         try {
-            if (view.toString().toLowerCase().equals(pathInfo.substring(1))) {
+            if (view.getView().toLowerCase().equals(pathInfo.substring(1))) {
                 String forwardPath = view.getPath();
                 LOGGER.debug("-----GET----- FORWARD to " + forwardPath);
                 request.getRequestDispatcher(forwardPath).forward(request, response);
             } else {
                 LOGGER.debug("-----GET----- REDIRECT to " + view);
-                response.sendRedirect(view.toString());
+                response.sendRedirect(view.getView());
             }
         } catch (ServletException | IOException e) {
             LOGGER.error("Error during processing GET request " + e.getMessage());

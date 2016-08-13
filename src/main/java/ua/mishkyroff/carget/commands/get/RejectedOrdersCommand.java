@@ -16,7 +16,8 @@ import ua.mishkyroff.carget.entities.OrderStatus;
 public class RejectedOrdersCommand implements Command {
     @Override
     public JspPages execute(IRequestWrapper wrapper) {
-        wrapper.setRequestAttribute(RequestAttributes.ORDERS, DAOFactory.getInstance()
+        DAOFactory daoFactory = wrapper.getDAOFactory();
+        wrapper.setRequestAttribute(RequestAttributes.ORDERS, daoFactory
                 .getOrdersDAO().getAllOrdersByStatus(OrderStatus.REJECTED));
         return JspPages.ADMIN_REJECTED_ORDERS;
     }

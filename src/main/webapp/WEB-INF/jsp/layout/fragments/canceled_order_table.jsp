@@ -9,6 +9,7 @@
     <th><fmt:message key="RENT" bundle="${lang}"/></th>
     <th><fmt:message key="FINE" bundle="${lang}"/></th>
     <th><fmt:message key="STATUS" bundle="${lang}"/></th>
+    <%--<th><fmt:message key="ACTION" bundle="${lang}"/></th>--%>
     <c:forEach var="order" items="${requestScope.orders}">
         <tr>
             <td>${order.idOrder}</td>
@@ -25,6 +26,16 @@
             <td>${order.rent}</td>
             <td>${order.fine}</td>
             <td><fmt:message key="${order.status}" bundle="${lang}"/></td>
+            <%--<td>--%>
+                <%--<form action="${pageContext.request.contextPath}/pages/admin_return_car"--%>
+                      <%--method="get">--%>
+                    <%--<input type="hidden" name="order_id" value="${order.idOrder}"/>--%>
+                    <%--<button type="submit" class="btn btn-primary">--%>
+                        <%--<fmt:message key="RETURN_CAR" bundle="${lang}"/></button>--%>
+                    <%--&lt;%&ndash;<input type="submit" value="<fmt:message key="RETURN_CAR"&ndash;%&gt;--%>
+                    <%--&lt;%&ndash;bundle="${lang}"/>"/>&ndash;%&gt;--%>
+                <%--</form>--%>
+            <%--</td>--%>
         </tr>
     </c:forEach>
     <c:remove var="orders" scope="session"/>

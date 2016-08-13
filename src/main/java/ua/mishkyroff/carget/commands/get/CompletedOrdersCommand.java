@@ -18,7 +18,8 @@ public class CompletedOrdersCommand implements Command {
     @Override
     public JspPages execute(IRequestWrapper wrapper) {
 
-        wrapper.setRequestAttribute(RequestAttributes.ORDERS, DAOFactory.getInstance().getOrdersDAO()
+        DAOFactory daoFactory = wrapper.getDAOFactory();
+        wrapper.setRequestAttribute(RequestAttributes.ORDERS, daoFactory.getOrdersDAO()
                 .getAllOrdersByStatus(OrderStatus.COMPLETED));
         return JspPages.ADMIN_COMPLETED_ORDERS;
     }

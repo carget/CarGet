@@ -20,7 +20,8 @@ public class CarInfoCommand implements Command {
     public JspPages execute(IRequestWrapper wrapper) {
         String carId = wrapper.getParameter("car_id");
         if (carId != null) {
-            Car car = DAOFactory.getInstance().getCarsDAO().getCarById(Integer.parseInt(carId));
+            DAOFactory daoFactory = wrapper.getDAOFactory();
+            Car car = daoFactory.getCarsDAO().getCarById(Integer.parseInt(carId));
             wrapper.setRequestAttribute(RequestAttributes.CAR, car);
         } else {
             return JspPages.INDEX;

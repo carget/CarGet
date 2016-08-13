@@ -73,22 +73,27 @@ public class UsersDAO {
             PreparedStatement ps = conn.prepareStatement(BUNDLE.getString("GET_USER_BY_EMAIL"));
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
-            User user = new User();
             if (!rs.next()) {
                 return null;
             }
-            user.setId(rs.getInt("user_id"));
-            user.setFirstName(rs.getString("first_name"));
-            user.setLastName(rs.getString("last_name"));
-            user.setEmail(rs.getString("email"));
-            user.setPassport(rs.getString("passport"));
-            user.setAdmin(rs.getBoolean("is_admin"));
-            user.setPassword(rs.getString("password"));
-            return user;
+            return getUserFromResultSet(rs);
         } catch (SQLException e) {
             LOGGER.error("GET USER by EMAIL SQL error, " + e);
             return null;
         }
+    }
+
+    private User getUserFromResultSet(ResultSet rs) throws SQLException {
+        User user = new User(
+                rs.getInt("user_id"),
+                rs.getString("first_name"),
+                rs.getString("last_name"),
+                rs.getString("passport"),
+                rs.getString("email"),
+                rs.getBoolean("is_admin"),
+                rs.getString("password")
+        );
+        return user;
     }
 
     public User getUserById(Integer id) {
@@ -96,18 +101,10 @@ public class UsersDAO {
             PreparedStatement ps = conn.prepareStatement(BUNDLE.getString("GET_USER_BY_ID"));
             ps.setString(1, id.toString());
             ResultSet rs = ps.executeQuery();
-            User user = new User();
             if (!rs.next()) {
                 return null;
             }
-            user.setId(rs.getInt("user_id"));
-            user.setFirstName(rs.getString("first_name"));
-            user.setLastName(rs.getString("last_name"));
-            user.setEmail(rs.getString("email"));
-            user.setPassport(rs.getString("passport"));
-            user.setAdmin(rs.getBoolean("is_admin"));
-            user.setPassword(rs.getString("password"));
-            return user;
+            return getUserFromResultSet(rs);
         } catch (SQLException e) {
             LOGGER.error("GET USER by ID SQL error, " + e);
             return null;

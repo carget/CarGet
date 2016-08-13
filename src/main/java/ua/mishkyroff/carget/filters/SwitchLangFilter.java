@@ -30,14 +30,15 @@ public class SwitchLangFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpSession hs = request.getSession(true);
         String language = servletRequest.getParameter("language");
-        if (language != null) {
-            hs.setAttribute(SessionAttributes.LOCALE.toString(), language);
-            Locale locale = new Locale(language);
-            Locale.setDefault(locale);
+        if (language == null) {
+            language = (String) hs.getAttribute(SessionAttributes.LOCALE.toString());
         }
+        hs.setAttribute(SessionAttributes.LOCALE.toString(), language);
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
         String currentPagePath = request.getHeader("referer");
         if (currentPagePath == null) {
-            response.sendRedirect(JspPages.INDEX.toString());
+            response.sendRedirect(JspPages.INDEX.getView());
         } else {
             response.sendRedirect(currentPagePath);
         }

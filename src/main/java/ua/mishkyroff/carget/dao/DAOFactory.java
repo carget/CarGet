@@ -21,14 +21,14 @@ public class DAOFactory {
 
     private static final Logger LOGGER = LogManager.getLogger("toConsole");
 
-    private static final DAOFactory instance = new DAOFactory();
+    private static final DAOFactory INSTANCE = new DAOFactory();
     private DataSource ds;
 
-    private DBInitializationDAO instanceDBInitializationDAO;
-    private UsersDAO instanceUsersDAO;
-    private CarsDAO instanceCarsDAO;
-    private OrdersDAO instanceOrdersDAO;
-    private BrandsDAO instanceBrandsDAO;
+    private volatile UsersDAO instanceUsersDAO;
+    private volatile CarsDAO instanceCarsDAO;
+    private volatile OrdersDAO instanceOrdersDAO;
+    private volatile BrandsDAO instanceBrandsDAO;
+    private volatile CheckDBDAO instanceCheckDBDAO;
 
     private DAOFactory() {
         try {
@@ -40,40 +40,100 @@ public class DAOFactory {
     }
 
     public static DAOFactory getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
-    public synchronized UsersDAO getUsersDAO() {
-        if (instanceUsersDAO == null) {
-            instanceUsersDAO = new UsersDAO(ds);
+    /**
+     * Method uses lazy initialization and double checked locking & volatile to improve performance
+     *
+     * @return UsersDAO singleton object
+     */
+    public UsersDAO getUsersDAO() {
+
+        UsersDAO localUsersDAO = instanceUsersDAO;
+        if (localUsersDAO == null) {
+            synchronized (UsersDAO.class) {
+                localUsersDAO = instanceUsersDAO;
+                if (localUsersDAO == null) {
+                    instanceUsersDAO = localUsersDAO = new UsersDAO(ds);
+                }
+            }
         }
-        return instanceUsersDAO;
+        return localUsersDAO;
     }
 
+    /**
+     * Method uses lazy initialization and double checked locking & volatile to improve performance
+     *
+     * @return CarsDAO singleton object
+     */
     public synchronized CarsDAO getCarsDAO() {
-        if (instanceCarsDAO == null) {
-            instanceCarsDAO = new CarsDAO(ds);
+
+        CarsDAO localCarsDAO = instanceCarsDAO;
+        if (localCarsDAO == null) {
+            synchronized (CarsDAO.class) {
+                localCarsDAO = instanceCarsDAO;
+                if (localCarsDAO == null) {
+                    instanceCarsDAO = localCarsDAO = new CarsDAO(ds);
+                }
+            }
         }
-        return instanceCarsDAO;
+        return localCarsDAO;
     }
 
+    /**
+     * Method uses lazy initialization and double checked locking & volatile to improve performance
+     *
+     * @return OrdersDAO singleton object
+     */
     public synchronized OrdersDAO getOrdersDAO() {
-        if (instanceOrdersDAO == null) {
-            instanceOrdersDAO = new OrdersDAO(ds);
+
+        OrdersDAO localOrdersDAO = instanceOrdersDAO;
+        if (localOrdersDAO == null) {
+            synchronized (OrdersDAO.class) {
+                localOrdersDAO = instanceOrdersDAO;
+                if (localOrdersDAO == null) {
+                    instanceOrdersDAO = localOrdersDAO = new OrdersDAO(ds);
+                }
+            }
         }
-        return instanceOrdersDAO;
+        return localOrdersDAO;
     }
 
+    /**
+     * Method uses lazy initialization and double checked locking & volatile to improve performance
+     *
+     * @return BrandsDAO singleton object
+     */
     public synchronized BrandsDAO getBrandsDAO() {
-        if (instanceBrandsDAO == null) {
-            instanceBrandsDAO = new BrandsDAO(ds);
+
+        BrandsDAO localBrandsDAO = instanceBrandsDAO;
+        if (localBrandsDAO == null) {
+            synchronized (BrandsDAO.class) {
+                localBrandsDAO = instanceBrandsDAO;
+                if (localBrandsDAO == null) {
+                    instanceBrandsDAO = localBrandsDAO = new BrandsDAO(ds);
+                }
+            }
         }
-        return instanceBrandsDAO;
+        return localBrandsDAO;
     }
-    public synchronized DBInitializationDAO getInitDBDAO() {
-        if (instanceDBInitializationDAO == null) {
-            instanceDBInitializationDAO = new DBInitializationDAO(ds);
+
+    /**
+     * Method uses lazy initialization and double checked locking & volatile to improve performance
+     *
+     * @return CheckDBDAO singleton object
+     */
+    public synchronized CheckDBDAO getInitDBDAO() {
+        CheckDBDAO localCheckDBDAO = instanceCheckDBDAO;
+        if (localCheckDBDAO == null) {
+            synchronized (CheckDBDAO.class) {
+                localCheckDBDAO = instanceCheckDBDAO;
+                if (localCheckDBDAO == null) {
+                    instanceCheckDBDAO = localCheckDBDAO = new CheckDBDAO(ds);
+                }
+            }
         }
-        return instanceDBInitializationDAO;
+        return localCheckDBDAO;
     }
 }
