@@ -112,14 +112,14 @@
         <div class="col-sm-2">
             <div class="form-group">
                 <label for="low_price"><fmt:message key="MIN_PRICE" bundle="${lang}"/></label>
-                <input type="number" name="low_price" id="low_price"
+                <input type="number" name="low_price" id="low_price" min="0"
                        value="${requestScope.car_filter.selectedLowPrice}" required/>
             </div>
         </div>
         <div class="col-sm-2">
             <div class="form-group">
                 <label for="hi_price"><fmt:message key="MAX_PRICE" bundle="${lang}"/></label>
-                <input type="number" name="hi_price" id="hi_price"
+                <input type="number" name="hi_price" id="hi_price" min="0"
                        value="${requestScope.car_filter.selectedHiPrice}" required/>
             </div>
         </div>

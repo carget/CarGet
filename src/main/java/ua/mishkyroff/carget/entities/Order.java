@@ -1,5 +1,6 @@
 package ua.mishkyroff.carget.entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -15,11 +16,11 @@ public class Order {
     private final LocalDate startDate;
     private final LocalDate endDate;
     private String comment;
-    private final double rent;
-    private double fine;
+    private final BigDecimal rent;
+    private BigDecimal fine;
     private OrderStatus status;
 
-    public Order(User user, Car car, LocalDate startDate, LocalDate endDate, String comment, double rent, double fine, OrderStatus status) {
+    public Order(User user, Car car, LocalDate startDate, LocalDate endDate, String comment, BigDecimal rent, BigDecimal fine, OrderStatus status) {
         this.user = user;
         this.car = car;
         this.startDate = startDate;
@@ -30,7 +31,7 @@ public class Order {
         this.status = status;
     }
 
-    public Order(int idOrder, User user, Car car, LocalDate startDate, LocalDate endDate, String comment, double rent, double fine, OrderStatus status) {
+    public Order(int idOrder, User user, Car car, LocalDate startDate, LocalDate endDate, String comment, BigDecimal rent, BigDecimal fine, OrderStatus status) {
         this(user, car, startDate, endDate, comment, rent, fine, status);
         this.idOrder = idOrder;
     }
@@ -74,15 +75,15 @@ public class Order {
         this.comment = comment;
     }
 
-    public double getRent() {
+    public BigDecimal getRent() {
         return rent;
     }
 
-    public double getFine() {
+    public BigDecimal getFine() {
         return fine;
     }
 
-    public void setFine(double fine) {
+    public void setFine(BigDecimal fine) {
         this.fine = fine;
     }
 

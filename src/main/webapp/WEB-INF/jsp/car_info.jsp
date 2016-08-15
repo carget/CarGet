@@ -1,5 +1,6 @@
 <%@include file="/WEB-INF/jsp/layout/header.jspf" %>
 
+<h3 align="center"><fmt:message key="CAR_INFO" bundle="${lang}"/></h3>
 <%--SHOW TABLE WITH ONE CAR--%>
 <%@include file="/WEB-INF/jsp/layout/fragments/one_car.jsp" %>
 

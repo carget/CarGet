@@ -1,9 +1,9 @@
 package ua.mishkyroff.carget.filters;
 
-import ua.mishkyroff.carget.commands.Messages;
-import ua.mishkyroff.carget.controllers.JspPages;
-import ua.mishkyroff.carget.controllers.SessionAttributes;
+import ua.mishkyroff.carget.controller.SessionAttributes;
+import ua.mishkyroff.carget.controller.View;
 import ua.mishkyroff.carget.entities.UserRole;
+import ua.mishkyroff.carget.model.Messages;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -43,8 +43,8 @@ public class SecurityFilter implements Filter {
             if (token == null || !Long.valueOf(token).equals(hs.getAttribute(
                     SessionAttributes.CSRF_TOKEN.toString()))) {
                 //security error
-                response.sendRedirect(JspPages.INDEX.getView());
                 hs.invalidate();
+                response.sendRedirect(View.INDEX.getURI());
                 return;
             }
         }
@@ -55,19 +55,18 @@ public class SecurityFilter implements Filter {
         String pathInfo = request.getPathInfo();
         if (pathInfo != null) {
             if (userRole != UserRole.ADMIN && pathInfo.startsWith("/admin")) {
-                hs.setAttribute(SessionAttributes.MESSAGE.toString(), Messages
-                        .ERROR_YOU_MUST_BE_ADMIN);
-                response.sendRedirect(Messages.ERROR_USER_ROLE);
+                hs.setAttribute(SessionAttributes.MESSAGE.toString(), Messages.ERROR_YOU_MUST_BE_ADMIN);
+                response.sendRedirect(View.ERROR_ROLE.getURI());
                 return;
             }
             if (userRole != UserRole.USER && pathInfo.startsWith("/user")) {
                 hs.setAttribute(SessionAttributes.MESSAGE.toString(), Messages.ERROR_YOU_MUST_BE_USER);
-                response.sendRedirect(Messages.ERROR_USER_ROLE);
+                response.sendRedirect(View.ERROR_ROLE.getURI());
                 return;
             }
             if (userRole != UserRole.GUEST && pathInfo.startsWith("/guest")) {
                 hs.setAttribute(SessionAttributes.MESSAGE.toString(), Messages.ERROR_YOU_MUST_BE_GUEST);
-                response.sendRedirect(Messages.ERROR_USER_ROLE);
+                response.sendRedirect(View.ERROR_ROLE.getURI());
                 return;
             }
         }

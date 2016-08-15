@@ -1,5 +1,7 @@
 package ua.mishkyroff.carget.entities;
 
+import java.math.BigDecimal;
+
 /**
  * A Car entity stores information about car's information
  * The entity has its representation in the database
@@ -11,16 +13,16 @@ public class Car {
     private final Model model;
     private final int year;
     private final FuelType fuelType;
-    private double pricePerDay;
+    private BigDecimal pricePerDay;
 
-    public Car(Model model, int year, FuelType fuelType, double pricePerDay) {
+    public Car(Model model, int year, FuelType fuelType, BigDecimal pricePerDay) {
         this.model = model;
         this.year = year;
         this.fuelType = fuelType;
         this.pricePerDay = pricePerDay;
     }
 
-    public Car(int idCar, Model model, int year, FuelType fuelType, double pricePerDay) {
+    public Car(int idCar, Model model, int year, FuelType fuelType, BigDecimal pricePerDay) {
         this(model, year, fuelType, pricePerDay);
         this.idCar =idCar;
     }
@@ -51,11 +53,11 @@ public class Car {
         return fuelType;
     }
 
-    public double getPricePerDay() {
+    public BigDecimal getPricePerDay() {
         return pricePerDay;
     }
 
-    public void setPricePerDay(double pricePerDay) {
+    public void setPricePerDay(BigDecimal pricePerDay) {
         this.pricePerDay = pricePerDay;
     }
 }

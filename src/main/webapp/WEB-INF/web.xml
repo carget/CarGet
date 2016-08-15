@@ -16,7 +16,7 @@
 
     <servlet>
         <servlet-name>MainServlet</servlet-name>
-        <servlet-class>ua.mishkyroff.carget.controllers.MainServlet</servlet-class>
+        <servlet-class>ua.mishkyroff.carget.controller.MainServlet</servlet-class>
     </servlet>
 
     <session-config>

@@ -2,7 +2,7 @@ package ua.mishkyroff.carget.listeners;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ua.mishkyroff.carget.dao.DAOFactory;
+import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.Exceptions.DBStructureError;
 
 import javax.servlet.ServletContextEvent;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 /**
  * Class {@code ContextListener} checks DB structure and initialize DataSource object
  * If some required tables are missing throw exception
- * It also saves DAOFactory instance to ServletContext scope
+ * It also saves MySQLDAOFactory instance to ServletContext scope
  *
  * @author Anton Mishkyroff
  */
@@ -28,7 +28,7 @@ public class ContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
         try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
+            AbstractDAOFactory daoFactory = AbstractDAOFactory.getDAOFactory("MySQL");
             daoFactory.getInitDBDAO().initAndCheckDB();
             servletContextEvent.getServletContext().setAttribute("DAOFactory", daoFactory);
         } catch (SQLException e) {

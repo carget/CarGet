@@ -2,7 +2,7 @@ package ua.mishkyroff.carget.filters;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ua.mishkyroff.carget.controllers.SessionAttributes;
+import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.entities.UserRole;
 
 import javax.servlet.*;
@@ -40,6 +40,9 @@ public class CheckSessionFilter implements Filter {
         }
         if (hs.getAttribute(SessionAttributes.USER_NAME.toString()) == null) {
             hs.setAttribute(SessionAttributes.USER_NAME.toString(), "");
+        }
+        if (hs.getAttribute(SessionAttributes.USER_ID.toString()) == null) {
+            hs.setAttribute(SessionAttributes.USER_ID.toString(), "");
         }
         if (hs.getAttribute(SessionAttributes.LOCALE.toString()) == null) {
             if (request.getLocale().getLanguage().toUpperCase().equals("RU")){

@@ -1,7 +1,7 @@
 package ua.mishkyroff.carget.filters;
 
-import ua.mishkyroff.carget.controllers.JspPages;
-import ua.mishkyroff.carget.controllers.SessionAttributes;
+import ua.mishkyroff.carget.controller.SessionAttributes;
+import ua.mishkyroff.carget.controller.View;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ public class SwitchLangFilter implements Filter {
         Locale.setDefault(locale);
         String currentPagePath = request.getHeader("referer");
         if (currentPagePath == null) {
-            response.sendRedirect(JspPages.INDEX.getView());
+            response.sendRedirect(View.INDEX.getURI());
         } else {
             response.sendRedirect(currentPagePath);
         }
