@@ -23,7 +23,7 @@
             <td>${order.endDate}</td>
             <td>${order.rent}</td>
             <td>${order.fine}</td>
-            <td><fmt:message key="${order.status}" bundle="${lang}"/></td>
+            <td><fmt:message key="${order.statusStr}" bundle="${lang}"/></td>
             <td>${order.comment}</td>
         </tr>
     </c:forEach>

@@ -1,7 +1,6 @@
 package ua.mishkyroff.carget.dao;
 
 import ua.mishkyroff.carget.entities.Car;
-import ua.mishkyroff.carget.entities.FuelType;
 import ua.mishkyroff.carget.model.CarFilter;
 
 import java.time.LocalDate;
@@ -24,5 +23,7 @@ public interface CarsDAO {
 
     boolean checkAvailability(Integer carId, LocalDate start, LocalDate end);
 
-    List<FuelType> getAllFuelTypes();
+    List<Integer> getAllFuelTypes();
+
+
 }

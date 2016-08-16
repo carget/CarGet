@@ -10,7 +10,7 @@ import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.OrdersDAO;
-import ua.mishkyroff.carget.entities.OrderStatus;
+import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.commands.Command;
 
 import java.math.BigDecimal;
@@ -55,8 +55,8 @@ public class CompleteOrderCommandTest extends Mockito{
         when(wrapper.getParameter("comment")).thenReturn(comment);
         when(wrapper.getDAOFactory()).thenReturn(daoFactory);
         when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
-        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(OrderStatus.PAID);
-        when(ordersDAO.setOrderStatusCommentFineById(Integer.valueOf(orderId), OrderStatus.COMPLETED,
+        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.PAID);
+        when(ordersDAO.setOrderStatusCommentFineById(Integer.valueOf(orderId), Order.COMPLETED,
                 comment, new BigDecimal(fine))).thenReturn(true);
         View page = command.execute(wrapper);
         assertEquals(View.ADMIN_COMPLETED_ORDERS, page);
@@ -73,8 +73,8 @@ public class CompleteOrderCommandTest extends Mockito{
         when(wrapper.getParameter("comment")).thenReturn(comment);
         when(wrapper.getDAOFactory()).thenReturn(daoFactory);
         when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
-        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(OrderStatus.REJECTED);
-        when(ordersDAO.setOrderStatusCommentFineById(Integer.valueOf(orderId), OrderStatus.COMPLETED,
+        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.REJECTED);
+        when(ordersDAO.setOrderStatusCommentFineById(Integer.valueOf(orderId), Order.COMPLETED,
                 comment,  new BigDecimal(fine))).thenReturn(true);
         View page = command.execute(wrapper);
         assertEquals(View.INDEX, page);
@@ -106,7 +106,7 @@ public class CompleteOrderCommandTest extends Mockito{
         when(wrapper.getParameter("comment")).thenReturn(comment);
         when(wrapper.getDAOFactory()).thenReturn(daoFactory);
         when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
-        when(ordersDAO.setOrderStatusCommentFineById(anyInt(), any(OrderStatus.class),
+        when(ordersDAO.setOrderStatusCommentFineById(anyInt(), anyInt(),
                 anyString(), any(BigDecimal.class))).thenReturn(false);
 
         View page = command.execute(wrapper);

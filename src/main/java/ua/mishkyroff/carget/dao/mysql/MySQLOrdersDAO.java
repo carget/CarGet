@@ -56,7 +56,7 @@ public class MySQLOrdersDAO implements OrdersDAO {
             ps.setString(5, order.getComment());
             ps.setBigDecimal(6, order.getRent());
             ps.setBigDecimal(7, order.getFine());
-            ps.setString(8, order.getStatus().toString());
+            ps.setInt(8, order.getStatus());
             LOGGER.debug(ps);
             ps.execute();
         } catch (SQLException e) {
@@ -67,13 +67,13 @@ public class MySQLOrdersDAO implements OrdersDAO {
     }
 
     @Override
-    public List<Order> getAllOrdersByStatus(OrderStatus status) {
+    public List<Order> getAllOrdersByStatus(int status) {
         List<Order> orders = new ArrayList<>();
         try (Connection connection = ds.getConnection();
              PreparedStatement statement =
                      connection.prepareStatement(BUNDLE.getString("GET_ALL_ORDERS_BY_STATUS"))) {
 
-            statement.setString(1, status.toString().toLowerCase());
+            statement.setInt(1, status);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 Order order = createOrderFromParameters(rs);
@@ -116,7 +116,7 @@ public class MySQLOrdersDAO implements OrdersDAO {
                 rs.getInt("cars.car_id"),
                 model,
                 rs.getInt("cars.year"),
-                FuelType.valueOf(rs.getString("cars.fuel_type").toUpperCase()),
+                rs.getInt("cars.fuel_type"),
                 rs.getBigDecimal("cars.price_day")
         );
         Order order = new Order(
@@ -128,15 +128,15 @@ public class MySQLOrdersDAO implements OrdersDAO {
                 rs.getString("orders.comment"),
                 rs.getBigDecimal("orders.rent"),
                 rs.getBigDecimal("orders.fine"),
-                OrderStatus.valueOf(rs.getString("orders.status").toUpperCase())
+                rs.getInt("orders.status")
         );
         return order;
     }
 
-    @Override public boolean setOrderStatusById(Integer orderId, OrderStatus status) {
+    @Override public boolean setOrderStatusById(Integer orderId, int status) {
         try (Connection connection = ds.getConnection();
              PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("SET_ORDER_STATUS_BY_ID"))) {
-            statement.setString(1, status.toString().toLowerCase());
+            statement.setInt(1, status);
             statement.setInt(2, orderId);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -145,11 +145,11 @@ public class MySQLOrdersDAO implements OrdersDAO {
         }
     }
 
-    @Override public boolean setOrderStatusCommentById(Integer orderId, OrderStatus status, String comment) {
+    @Override public boolean setOrderStatusCommentById(Integer orderId, int status, String comment) {
         try (Connection connection = ds.getConnection();
              PreparedStatement statement = connection.prepareStatement(BUNDLE.getString
                      ("SET_ORDER_STATUS_COMMENT_BY_ID"))) {
-            statement.setString(1, status.toString().toLowerCase());
+            statement.setInt(1, status);
             statement.setString(2, comment);
             statement.setInt(3, orderId);
             return statement.executeUpdate() > 0;
@@ -159,10 +159,11 @@ public class MySQLOrdersDAO implements OrdersDAO {
         }
     }
 
-    @Override public boolean setOrderStatusCommentFineById(Integer orderId, OrderStatus status, String comment, BigDecimal fine) {
+    @Override public boolean setOrderStatusCommentFineById(Integer orderId, int status, String
+            comment, BigDecimal fine) {
         try (Connection connection = ds.getConnection();
              PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("SET_ORDER_STATUS_COMMENT_FINE_BY_ID"))) {
-            statement.setString(1, status.toString().toLowerCase());
+            statement.setInt(1, status);
             statement.setString(2, comment);
             statement.setBigDecimal(3, fine);
             statement.setString(4, orderId.toString());
@@ -191,7 +192,7 @@ public class MySQLOrdersDAO implements OrdersDAO {
         }
     }
 
-    @Override public OrderStatus getOrderStatusById(Integer orderId) {
+    @Override public Integer getOrderStatusById(Integer orderId) {
         Order order = getOrderById(orderId);
         if (order != null) {
             return order.getStatus();

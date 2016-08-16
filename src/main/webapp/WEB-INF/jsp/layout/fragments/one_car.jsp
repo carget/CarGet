@@ -24,7 +24,7 @@
         <td>${requestScope.car.model.doorsQty}</td>
         <td><fmt:message key="${requestScope.car.model.automat}" bundle="${lang}"/></td>
         <td><fmt:message key="${requestScope.car.model.condition}" bundle="${lang}"/></td>
-        <td><fmt:message key="${requestScope.car.fuelType}" bundle="${lang}"/></td>
+        <td><fmt:message key="${requestScope.car.fuelTypeString}" bundle="${lang}"/></td>
         <td>${requestScope.car.pricePerDay}</td>
     </tr>
 </table>

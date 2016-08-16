@@ -24,7 +24,7 @@
             <td>${order.comment}</td>
             <td>${order.rent}</td>
             <td>${order.fine}</td>
-            <td><fmt:message key="${order.status}" bundle="${lang}"/></td>
+            <td><fmt:message key="${order.statusStr}" bundle="${lang}"/></td>
         </tr>
     </c:forEach>
     <c:remove var="orders" scope="session"/>

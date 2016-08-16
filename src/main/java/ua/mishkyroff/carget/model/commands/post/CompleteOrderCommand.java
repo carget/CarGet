@@ -6,7 +6,7 @@ import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
-import ua.mishkyroff.carget.entities.OrderStatus;
+import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.Messages;
 import ua.mishkyroff.carget.model.commands.Command;
 
@@ -38,10 +38,10 @@ public class CompleteOrderCommand implements Command {
         comment = (comment == null) ? "" : comment;
         Integer orderIdInt = Integer.parseInt(orderId);
         AbstractDAOFactory daoFactory = wrapper.getDAOFactory();
-        OrderStatus orderStatus = daoFactory.getOrdersDAO().getOrderStatusById(orderIdInt);
-        if (orderStatus == OrderStatus.PAID) {
+        Integer orderStatus = daoFactory.getOrdersDAO().getOrderStatusById(orderIdInt);
+        if (orderStatus == Order.PAID) {
             if (daoFactory.getOrdersDAO()
-                    .setOrderStatusCommentFineById(Integer.valueOf(orderId), OrderStatus.COMPLETED,
+                    .setOrderStatusCommentFineById(Integer.valueOf(orderId), Order.COMPLETED,
                             comment, new BigDecimal(fine))) {
                 LOGGER.debug("Order completed!");
                 return View.ADMIN_COMPLETED_ORDERS;

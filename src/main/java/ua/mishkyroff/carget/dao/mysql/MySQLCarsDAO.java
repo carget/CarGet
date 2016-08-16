@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.dao.CarsDAO;
 import ua.mishkyroff.carget.entities.Brand;
 import ua.mishkyroff.carget.entities.Car;
-import ua.mishkyroff.carget.entities.FuelType;
 import ua.mishkyroff.carget.entities.Model;
 import ua.mishkyroff.carget.model.CarFilter;
 
@@ -81,7 +80,7 @@ public class MySQLCarsDAO implements CarsDAO {
                     carFilter.getSelectedAutomat().toString());
             statement.setString(8, (carFilter.getSelectedCondition() == -1) ? "%" :
                     carFilter.getSelectedCondition().toString());
-            statement.setString(9, (carFilter.getSelectedFuelType() == FuelType.ALL) ? "%" :
+            statement.setString(9, (carFilter.getSelectedFuelType() == Car.ALL) ? "%" :
                     carFilter.getSelectedFuelType().toString());
             statement.setInt(10, carFilter.getSelectedLowPrice());
             statement.setInt(11, carFilter.getSelectedHiPrice());
@@ -118,7 +117,7 @@ public class MySQLCarsDAO implements CarsDAO {
                 rs.getInt("cars.car_id"),
                 model,
                 rs.getInt("cars.year"),
-                FuelType.valueOf(rs.getString("cars.fuel_type").toUpperCase()),
+                rs.getInt("cars.fuel_type"),
                 rs.getBigDecimal("cars.price_day")
         );
         return car;
@@ -161,13 +160,13 @@ public class MySQLCarsDAO implements CarsDAO {
 
     }
 
-    @Override public List<FuelType> getAllFuelTypes() {
-        List<FuelType> fuelTypes = new ArrayList<>();
+    @Override public List<Integer> getAllFuelTypes() {
+        List<Integer> fuelTypes = new ArrayList<>();
         try (Connection connection = ds.getConnection();
              Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(BUNDLE.getString("GET_ALL_CAR_FUEL_TYPES"));
             while (rs.next()) {
-                fuelTypes.add(FuelType.valueOf(rs.getString("fuel_type")));
+                fuelTypes.add(rs.getInt("fuel_type"));
             }
             return fuelTypes;
         } catch (SQLException e) {
@@ -175,4 +174,5 @@ public class MySQLCarsDAO implements CarsDAO {
             return null;
         }
     }
+
 }

@@ -4,7 +4,7 @@ import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
-import ua.mishkyroff.carget.entities.OrderStatus;
+import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.Messages;
 import ua.mishkyroff.carget.model.commands.Command;
 
@@ -33,10 +33,9 @@ public class RejectOrderCommand implements Command {
             return View.ADMIN_NEW_ORDERS;
         }
         AbstractDAOFactory daoFactory = wrapper.getDAOFactory();
-        OrderStatus orderStatus = daoFactory.getOrdersDAO().getOrderStatusById(orderId);
-        if (orderStatus == OrderStatus.NEW) {
-            if (daoFactory.getOrdersDAO().setOrderStatusCommentById(orderId, OrderStatus
-                    .REJECTED, reason)) {
+        Integer orderStatus = daoFactory.getOrdersDAO().getOrderStatusById(orderId);
+        if (orderStatus == Order.NEW) {
+            if (daoFactory.getOrdersDAO().setOrderStatusCommentById(orderId, Order.REJECTED, reason)) {
                 return View.ADMIN_NEW_ORDERS;
             }
         }

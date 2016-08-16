@@ -10,7 +10,7 @@ import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.OrdersDAO;
-import ua.mishkyroff.carget.entities.OrderStatus;
+import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.Messages;
 import ua.mishkyroff.carget.model.commands.Command;
 
@@ -51,8 +51,8 @@ public class CancelOrderCommandTest extends Mockito{
         when(wrapper.getParameter("reason")).thenReturn(reason);
         when(wrapper.getDAOFactory()).thenReturn(daoFactory);
         when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
-        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(OrderStatus.APPROVED);
-        when(ordersDAO.setOrderStatusCommentById(Integer.parseInt(orderId), OrderStatus.CANCELED, reason))
+        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.APPROVED);
+        when(ordersDAO.setOrderStatusCommentById(Integer.parseInt(orderId), Order.CANCELED, reason))
                 .thenReturn(true);
         View page = command.execute(wrapper);
         assertEquals(View.ADMIN_APPROVED_ORDERS,page);
@@ -68,8 +68,8 @@ public class CancelOrderCommandTest extends Mockito{
         when(wrapper.getParameter("reason")).thenReturn(reason);
         when(wrapper.getDAOFactory()).thenReturn(daoFactory);
         when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
-        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(OrderStatus.NEW);
-        when(ordersDAO.setOrderStatusCommentById(Integer.parseInt(orderId), OrderStatus.CANCELED, reason))
+        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.NEW);
+        when(ordersDAO.setOrderStatusCommentById(Integer.parseInt(orderId), Order.CANCELED, reason))
                 .thenReturn(true);
         View page = command.execute(wrapper);
         assertEquals(View.ADMIN_APPROVED_ORDERS,page);

@@ -10,7 +10,7 @@ import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.OrdersDAO;
-import ua.mishkyroff.carget.entities.OrderStatus;
+import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.Messages;
 import ua.mishkyroff.carget.model.commands.Command;
 
@@ -50,9 +50,8 @@ public class RejectOrderCommandTest extends Mockito {
         when(wrapper.getParameter("reason")).thenReturn(reason);
         when(wrapper.getDAOFactory()).thenReturn(daoFactory);
         when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
-        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(OrderStatus.NEW);
-        when(ordersDAO.setOrderStatusCommentById(Integer.parseInt(orderId), OrderStatus
-                .REJECTED, reason)).thenReturn(true);
+        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.NEW);
+        when(ordersDAO.setOrderStatusCommentById(Integer.parseInt(orderId), Order.REJECTED, reason)).thenReturn(true);
         View page = command.execute(wrapper);
         assertEquals(View.ADMIN_NEW_ORDERS, page);
         verify(wrapper, times(0)).setSessionAttribute(any(SessionAttributes.class), anyString());
@@ -66,9 +65,8 @@ public class RejectOrderCommandTest extends Mockito {
         when(wrapper.getParameter("reason")).thenReturn(reason);
         when(wrapper.getDAOFactory()).thenReturn(daoFactory);
         when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
-        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(OrderStatus.COMPLETED);
-        when(ordersDAO.setOrderStatusCommentById(Integer.parseInt(orderId), OrderStatus
-                .REJECTED, reason)).thenReturn(true);
+        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.COMPLETED);
+        when(ordersDAO.setOrderStatusCommentById(Integer.parseInt(orderId), Order.REJECTED, reason)).thenReturn(true);
         View page = command.execute(wrapper);
         assertEquals(View.ADMIN_NEW_ORDERS, page);
         verify(wrapper, times(1)).setSessionAttribute(SessionAttributes.MESSAGE,
@@ -111,8 +109,7 @@ public class RejectOrderCommandTest extends Mockito {
         when(wrapper.getParameter("reason")).thenReturn(reason);
         when(wrapper.getDAOFactory()).thenReturn(daoFactory);
         when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
-        when(ordersDAO.setOrderStatusCommentById(anyInt(), any(OrderStatus.class), anyString()))
-                .thenReturn(false);
+        when(ordersDAO.setOrderStatusCommentById(anyInt(), anyInt(), anyString())).thenReturn(false);
 
         View page = command.execute(wrapper);
 

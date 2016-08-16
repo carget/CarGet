@@ -80,16 +80,29 @@
             <fmt:message key="FUEL" bundle="${lang}"/>
             <%--FILL FUEL TYPE FROM FILTER OBJECT--%>
             <select size="1" class="form-control" name="fuel_type">
-                <option value="ALL">
+                <option value="3" <c:out value="${requestScope.car_filter.selectedFuelType == 3 ?
+                 'selected' : '' }"/>>
                     <fmt:message key="ALL" bundle="${lang}"/>
                 </option>
-                <c:forEach var="fuel" items="${requestScope.car_filter.fuelTypes}">
-                    <option value="${fuel}"
-                            <c:out value="${fuel == requestScope.car_filter.selectedFuelType ?
-                    'selected' : '' }"/>>
-                        <fmt:message key="${fuel}" bundle="${lang}"/>
-                    </option>
-                </c:forEach>
+                <option value="0" <c:out value="${requestScope.car_filter.selectedFuelType == 0 ?
+                 'selected' : '' }"/>>
+                    <fmt:message key="PETROL" bundle="${lang}"/>
+                </option>
+                <option value="1" <c:out value="${requestScope.car_filter.selectedFuelType == 1 ?
+                 'selected' : '' }"/>>
+                    <fmt:message key="GASOLINE" bundle="${lang}"/>
+                </option>
+                <option value="2" <c:out value="${requestScope.car_filter.selectedFuelType == 2 ?
+                 'selected' : '' }"/>>
+                    <fmt:message key="DISEL" bundle="${lang}"/>
+                </option>
+                <%--<c:forEach var="fuel" items="${requestScope.car_filter.fuelTypes}">--%>
+                <%--<option value="${fuel}"--%>
+                <%--<c:out value="${fuel == requestScope.car_filter.selectedFuelTypeString ?--%>
+                <%--'selected' : '' }"/>>--%>
+                <%--<fmt:message key="${fuel}" bundle="${lang}"/>--%>
+                <%--</option>--%>
+                <%--</c:forEach>--%>
             </select>
         </div>
 

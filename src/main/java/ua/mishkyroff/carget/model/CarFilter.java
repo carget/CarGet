@@ -3,7 +3,7 @@ package ua.mishkyroff.carget.model;
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.CarsDAO;
 import ua.mishkyroff.carget.entities.Brand;
-import ua.mishkyroff.carget.entities.FuelType;
+import ua.mishkyroff.carget.entities.Car;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,12 +18,12 @@ import java.util.List;
 public class CarFilter {
     private List<Brand> brands;
     private List<Integer> years;
-    private List<FuelType> fuelTypes;
+    private List<Integer> fuelTypes;
     private Integer selectedBrandId;
     private Integer selectedYear;
     private Integer selectedCondition;
     private Integer selectedAutomat;
-    private FuelType selectedFuelType;
+    private Integer selectedFuelType;
     private RentPeriod period;
     private String error;
     private boolean haveUnreadError;
@@ -45,7 +45,7 @@ public class CarFilter {
         this.selectedYear = -1;
         this.selectedCondition = -1;
         this.selectedAutomat = -1;
-        this.selectedFuelType = FuelType.ALL;
+        this.selectedFuelType = Car.ALL;
         this.error = "";
         this.haveUnreadError = false;
         this.selectedLowPrice = 0;
@@ -100,13 +100,13 @@ public class CarFilter {
         }
     }
 
-    public FuelType getSelectedFuelType() {
+    public Integer getSelectedFuelType() {
         return selectedFuelType;
     }
 
     public void setSelectedFuelType(String fuelType) {
         if (fuelType != null) {
-            this.selectedFuelType = FuelType.valueOf(fuelType);
+            this.selectedFuelType = Integer.valueOf(fuelType);
         }
     }
 
@@ -152,7 +152,7 @@ public class CarFilter {
         }
     }
 
-    public List<FuelType> getFuelTypes() {
+    public List<Integer> getFuelTypes() {
         return fuelTypes;
     }
 

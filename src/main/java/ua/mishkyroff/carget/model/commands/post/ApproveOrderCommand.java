@@ -6,7 +6,7 @@ import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
-import ua.mishkyroff.carget.entities.OrderStatus;
+import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.Messages;
 import ua.mishkyroff.carget.model.commands.Command;
 
@@ -32,9 +32,9 @@ public class ApproveOrderCommand implements Command {
 
         Integer orderIdInt = Integer.parseInt(orderId);
 
-        OrderStatus orderStatus = daoFactory.getOrdersDAO().getOrderStatusById(orderIdInt);
-        if (orderStatus == OrderStatus.NEW) {
-            if (daoFactory.getOrdersDAO().setOrderStatusById(orderIdInt, OrderStatus.APPROVED)) {
+        Integer orderStatus = daoFactory.getOrdersDAO().getOrderStatusById(orderIdInt);
+        if (orderStatus == Order.NEW) {
+            if (daoFactory.getOrdersDAO().setOrderStatusById(orderIdInt, Order.APPROVED)) {
                 return View.ADMIN_NEW_ORDERS;
             }
         }

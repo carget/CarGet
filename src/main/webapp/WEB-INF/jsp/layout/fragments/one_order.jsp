@@ -23,6 +23,6 @@
         <td>${requestScope.order.comment}</td>
         <td>${requestScope.order.rent}</td>
         <td>${requestScope.order.fine}</td>
-        <td><fmt:message key="${requestScope.order.status}" bundle="${lang}"/></td>
+        <td><fmt:message key="${requestScope.order.statusStr}" bundle="${lang}"/></td>
     </tr>
 </table>

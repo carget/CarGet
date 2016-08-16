@@ -9,7 +9,6 @@ import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.CarsDAO;
 import ua.mishkyroff.carget.entities.Car;
 import ua.mishkyroff.carget.entities.Order;
-import ua.mishkyroff.carget.entities.OrderStatus;
 import ua.mishkyroff.carget.entities.User;
 import ua.mishkyroff.carget.model.Messages;
 import ua.mishkyroff.carget.model.RentPeriod;
@@ -64,7 +63,7 @@ public class ProcessOrderCommand implements Command {
         BigDecimal totalPrice = rentPeriod.getTotalRent(car.getPricePerDay());
 //        BigDecimal totalPrice = car.getPricePerDay().multiply(rentPeriod.getDiffDays());
         User user = daoFactory.getUsersDAO().getUserById((Integer) wrapper.getSessionAttribute(SessionAttributes.USER_ID));
-        Order order = new Order(user, car, startDate, endDate, "", totalPrice, new BigDecimal(0), OrderStatus.NEW);
+        Order order = new Order(user, car, startDate, endDate, "", totalPrice, new BigDecimal(0), Order.NEW);
         if (daoFactory.getOrdersDAO().addOrder(order)) {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ORDER_ADDED_SUCCESSFULLY);
             LOGGER.debug("new order added");

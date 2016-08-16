@@ -10,7 +10,7 @@ import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.OrdersDAO;
-import ua.mishkyroff.carget.entities.OrderStatus;
+import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.commands.Command;
 
 import static org.junit.Assert.assertEquals;
@@ -49,8 +49,8 @@ public class ApproveOrderCommandTest extends Mockito {
         when(wrapper.getParameter("order_id")).thenReturn(orderId);
         when(wrapper.getDAOFactory()).thenReturn(daoFactory);
         when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
-        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(OrderStatus.NEW);
-        when(ordersDAO.setOrderStatusById(Integer.parseInt(orderId), OrderStatus.APPROVED))
+        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.NEW);
+        when(ordersDAO.setOrderStatusById(Integer.parseInt(orderId), Order.APPROVED))
                 .thenReturn(true);
         View page = command.execute(wrapper);
         assertEquals(page, View.ADMIN_NEW_ORDERS);
@@ -64,8 +64,8 @@ public class ApproveOrderCommandTest extends Mockito {
         when(wrapper.getParameter("order_id")).thenReturn(orderId);
         when(wrapper.getDAOFactory()).thenReturn(daoFactory);
         when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
-        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(OrderStatus.COMPLETED);
-        when(ordersDAO.setOrderStatusById(Integer.parseInt(orderId), OrderStatus.APPROVED))
+        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.COMPLETED);
+        when(ordersDAO.setOrderStatusById(Integer.parseInt(orderId), Order.APPROVED))
                 .thenReturn(true);
         View page = command.execute(wrapper);
         assertEquals(page, View.INDEX);

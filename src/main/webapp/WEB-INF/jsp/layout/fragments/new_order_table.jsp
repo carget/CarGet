@@ -27,7 +27,7 @@
                 <%--<td>${order.comment}</td>--%>
             <td>${order.rent}</td>
             <td>${order.fine}</td>
-            <td><fmt:message key="${order.status}" bundle="${lang}"/></td>
+            <td><fmt:message key="${order.statusStr}" bundle="${lang}"/></td>
             <td>
                 <form action="${pageContext.request.contextPath}/pages/admin_approve_order"
                       method="post">

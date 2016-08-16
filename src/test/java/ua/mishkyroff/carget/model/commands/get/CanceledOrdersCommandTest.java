@@ -11,7 +11,6 @@ import ua.mishkyroff.carget.controller.View;
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.OrdersDAO;
 import ua.mishkyroff.carget.entities.Order;
-import ua.mishkyroff.carget.entities.OrderStatus;
 import ua.mishkyroff.carget.model.commands.Command;
 
 import java.util.List;
@@ -48,7 +47,7 @@ public class CanceledOrdersCommandTest extends Mockito {
 
     @Test
     public void execute() throws Exception {
-        OrderStatus status = OrderStatus.CANCELED;
+        Integer status = Order.CANCELED;
         when(wrapper.getDAOFactory()).thenReturn(daoFactory);
         when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
         when(ordersDAO.getAllOrdersByStatus(status)).thenReturn(orderList);

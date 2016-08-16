@@ -4,7 +4,7 @@ import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
-import ua.mishkyroff.carget.entities.OrderStatus;
+import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.Messages;
 import ua.mishkyroff.carget.model.commands.Command;
 
@@ -32,9 +32,9 @@ public class CancelOrderCommand implements Command {
             return View.ADMIN_APPROVED_ORDERS;
         }
         AbstractDAOFactory daoFactory = wrapper.getDAOFactory();
-        OrderStatus orderStatus = daoFactory.getOrdersDAO().getOrderStatusById(orderId);
-        if (orderStatus == OrderStatus.APPROVED) {
-            if (daoFactory.getOrdersDAO().setOrderStatusCommentById(orderId, OrderStatus.CANCELED, reason)) {
+        Integer orderStatus = daoFactory.getOrdersDAO().getOrderStatusById(orderId);
+        if (orderStatus == Order.APPROVED) {
+            if (daoFactory.getOrdersDAO().setOrderStatusCommentById(orderId, Order.CANCELED, reason)) {
                 return View.ADMIN_APPROVED_ORDERS;
             }
         }

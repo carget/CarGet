@@ -10,6 +10,13 @@ import java.time.LocalDate;
  * @author Anton Mishkyroff
  */
 public class Order {
+    public static final int NEW = 1;
+    public static final int APPROVED = 2;
+    public static final int REJECTED = 3;
+    public static final int COMPLETED = 4;
+    public static final int CANCELED = 5;
+    public static final int PAID = 6;
+
     private int idOrder;
     private final User user;
     private final Car car;
@@ -18,9 +25,10 @@ public class Order {
     private String comment;
     private final BigDecimal rent;
     private BigDecimal fine;
-    private OrderStatus status;
+    private int status;
 
-    public Order(User user, Car car, LocalDate startDate, LocalDate endDate, String comment, BigDecimal rent, BigDecimal fine, OrderStatus status) {
+    public Order(User user, Car car, LocalDate startDate, LocalDate endDate, String comment,
+                 BigDecimal rent, BigDecimal fine, int status) {
         this.user = user;
         this.car = car;
         this.startDate = startDate;
@@ -31,7 +39,8 @@ public class Order {
         this.status = status;
     }
 
-    public Order(int idOrder, User user, Car car, LocalDate startDate, LocalDate endDate, String comment, BigDecimal rent, BigDecimal fine, OrderStatus status) {
+    public Order(int idOrder, User user, Car car, LocalDate startDate, LocalDate endDate, String
+            comment, BigDecimal rent, BigDecimal fine, int status) {
         this(user, car, startDate, endDate, comment, rent, fine, status);
         this.idOrder = idOrder;
     }
@@ -87,11 +96,27 @@ public class Order {
         this.fine = fine;
     }
 
-    public OrderStatus getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
+    public void setStatus(int status) {
         this.status = status;
+    }
+
+    /**
+     * String representation of order status
+     * @return - string representation
+     */
+    public String getStatusStr(){
+        switch (this.status){
+            case 1: return "NEW";
+            case 2: return "APPROVED";
+            case 3: return "REJECTED";
+            case 4: return "COMPLETED";
+            case 5: return "CANCELED";
+            case 6: return "PAID";
+            default: return "UNKNOWN_ORDER_STATUS";
+        }
     }
 }

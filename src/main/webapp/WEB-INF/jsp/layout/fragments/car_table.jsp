@@ -26,7 +26,7 @@
             <td>${car.model.doorsQty}</td>
             <td><fmt:message key="${car.model.automat}" bundle="${lang}"/></td>
             <td><fmt:message key="${car.model.condition}" bundle="${lang}"/></td>
-            <td><fmt:message key="${car.fuelType}" bundle="${lang}"/></td>
+            <td><fmt:message key="${car.fuelTypeString}" bundle="${lang}"/></td>
             <td>${car.pricePerDay}</td>
             <td>
                 <form action="${pageContext.request.contextPath}/pages/user_prepare_order"

@@ -18,7 +18,6 @@ import ua.mishkyroff.carget.dao.CarsDAO;
 import ua.mishkyroff.carget.dao.OrdersDAO;
 import ua.mishkyroff.carget.dao.UsersDAO;
 import ua.mishkyroff.carget.entities.Car;
-import ua.mishkyroff.carget.entities.FuelType;
 import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.entities.User;
 import ua.mishkyroff.carget.model.Messages;
@@ -70,7 +69,7 @@ public class ProcessOrderCommandTest extends Mockito {
     }
 
     private Car getDefaultCar() {
-        return new Car(null, 2000, FuelType.ALL, new BigDecimal(10));
+        return new Car(null, 2000, Car.ALL, new BigDecimal(10));
     }
 
     @After
