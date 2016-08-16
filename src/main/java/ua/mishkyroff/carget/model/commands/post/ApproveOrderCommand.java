@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.Messages;
 import ua.mishkyroff.carget.model.commands.Command;
@@ -28,16 +28,19 @@ public class ApproveOrderCommand implements Command {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_APPROVING_ORDER);
             return View.INDEX;
         }
-        AbstractDAOFactory daoFactory = wrapper.getDAOFactory();
-
+        //todo final? TRANSACTION
         Integer orderIdInt = Integer.parseInt(orderId);
-
-        Integer orderStatus = daoFactory.getOrdersDAO().getOrderStatusById(orderIdInt);
-        if (orderStatus == Order.NEW) {
-            if (daoFactory.getOrdersDAO().setOrderStatusById(orderIdInt, Order.APPROVED)) {
+        DAOManager daoManager = wrapper.getDAOManager();
+        Integer orderStatus = (Integer) daoManager.openExecuteAndClose(
+                manager -> manager.getOrdersDAO().getOrderStatusById(orderIdInt));
+        if (orderStatus != null && orderStatus == Order.NEW) {
+            boolean result = (boolean) daoManager.openExecuteAndClose(
+                    manager -> manager.getOrdersDAO().setOrderStatusById(orderIdInt, Order.APPROVED));
+            if (result) {
                 return View.ADMIN_NEW_ORDERS;
             }
         }
+        //*******************************
         wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_APPROVING_ORDER);
         return View.INDEX;
 

@@ -36,7 +36,7 @@ public class RegisterCommandTest extends Mockito {
     @Test
     public void execute() throws Exception {
         View page = command.execute(wrapper);
-        assertEquals(page, View.GUEST_REGISTER);
+        assertEquals(View.GUEST_REGISTER, page);
     }
 
 }

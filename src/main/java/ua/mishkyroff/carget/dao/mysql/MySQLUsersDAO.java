@@ -6,7 +6,6 @@ import ua.mishkyroff.carget.dao.UsersDAO;
 import ua.mishkyroff.carget.entities.User;
 import ua.mishkyroff.carget.entities.UserRole;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,48 +18,52 @@ import java.util.ResourceBundle;
  * @author Anton Mishkyroff
  */
 public class MySQLUsersDAO implements UsersDAO {
-    private DataSource ds;
+    private Connection connection;
     private static final Logger LOGGER = LogManager.getLogger("toConsole");
     private final static ResourceBundle BUNDLE = ResourceBundle.getBundle("sql_statements");
 
-    public MySQLUsersDAO(DataSource ds) {
-        this.ds = ds;
+    public MySQLUsersDAO(Connection connection) {
+        this.connection = connection;
     }
 
-    @Override public UserRole getUserRole(User user) {
-        try (Connection conn = ds.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(BUNDLE.getString("USER_ROLE"));
+    @Override
+    public UserRole getUserRole(User user) {
+        try (PreparedStatement ps = connection.prepareStatement(BUNDLE.getString("USER_ROLE"))) {
+
             ps.setString(1, user.getEmail());
             ResultSet rs = ps.executeQuery();
+            UserRole userRole = null;
             if (rs.next()) {
                 if (rs.getBoolean("is_admin")) {
-                    return UserRole.ADMIN;
+                    userRole = UserRole.ADMIN;
                 } else {
-                    return UserRole.USER;
+                    userRole = UserRole.USER;
                 }
             } else {
-                return UserRole.GUEST;
+                userRole = UserRole.GUEST;
             }
+            rs.close();
+            return userRole;
         } catch (SQLException e) {
             LOGGER.error("check user's role SQL error " + e);
             return UserRole.GUEST;
         }
     }
 
-    @Override public boolean add(User user) {
+    @Override
+    public boolean add(User user) {
         if (getUserByEmail(user.getEmail()) != null) {
             //we have such user in DB
             return false;
         }
-        try (Connection conn = ds.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(BUNDLE.getString("INSERT_USER"));
+        try (PreparedStatement ps = connection.prepareStatement(BUNDLE.getString("INSERT_USER"))) {
+
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
             ps.setString(3, user.getEmail());
             ps.setString(4, user.getPassport());
             ps.setString(5, (user.getAdmin() ? "1" : "0"));
             ps.setString(6, user.getPassword());
-            LOGGER.debug(ps);
             ps.execute();
         } catch (SQLException e) {
             LOGGER.error("ADD user SQL error " + e);
@@ -69,15 +72,18 @@ public class MySQLUsersDAO implements UsersDAO {
         return true;
     }
 
-    @Override public User getUserByEmail(String email) {
-        try (Connection conn = ds.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(BUNDLE.getString("GET_USER_BY_EMAIL"));
+    @Override
+    public User getUserByEmail(String email) {
+        try (PreparedStatement ps = connection.prepareStatement(BUNDLE.getString("GET_USER_BY_EMAIL"))) {
+
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
-                return null;
+            User user = null;
+            if (rs.next()) {
+                user = getUserFromResultSet(rs);
             }
-            return getUserFromResultSet(rs);
+            rs.close();
+            return user;
         } catch (SQLException e) {
             LOGGER.error("GET USER by EMAIL SQL error, " + e);
             return null;
@@ -97,15 +103,18 @@ public class MySQLUsersDAO implements UsersDAO {
         return user;
     }
 
-    @Override public User getUserById(Integer id) {
-        try (Connection conn = ds.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(BUNDLE.getString("GET_USER_BY_ID"));
+    @Override
+    public User getUserById(Integer id) {
+        try (PreparedStatement ps = connection.prepareStatement(BUNDLE.getString("GET_USER_BY_ID"))) {
+
             ps.setString(1, id.toString());
             ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
-                return null;
+            User user = null;
+            if (rs.next()) {
+                user = getUserFromResultSet(rs);
             }
-            return getUserFromResultSet(rs);
+            rs.close();
+            return user;
         } catch (SQLException e) {
             LOGGER.error("GET USER by ID SQL error, " + e);
             return null;

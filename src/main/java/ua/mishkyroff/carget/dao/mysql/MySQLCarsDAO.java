@@ -8,7 +8,6 @@ import ua.mishkyroff.carget.entities.Car;
 import ua.mishkyroff.carget.entities.Model;
 import ua.mishkyroff.carget.model.CarFilter;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,38 +20,38 @@ import java.util.ResourceBundle;
  * @author Anton Mishkyroff
  */
 public class MySQLCarsDAO implements CarsDAO {
-    private final DataSource ds;
+    private final Connection connection;
     private static final Logger LOGGER = LogManager.getLogger("toConsole");
     private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("sql_statements");
 
-    public MySQLCarsDAO(DataSource ds) {
-        this.ds = ds;
+    public MySQLCarsDAO(Connection connection) {
+        this.connection = connection;
     }
 
-    @Override public Car getCarById(int id) {
-        try (Connection connection = ds.getConnection();
-             PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("GET_CAR_BY_ID"))) {
-
+    @Override
+    public Car getCarById(int id) {
+        try (PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("GET_CAR_BY_ID"))) {
             statement.setString(1, Integer.valueOf(id).toString());
             ResultSet rs = statement.executeQuery();
-            if (!rs.next()) {
-                return null;
-            } else {
-                return getCarFromResultSet(rs);
+            Car car = null;
+            if (rs.next()) {
+                car = getCarFromResultSet(rs);
             }
+            rs.close();
+            return car;
         } catch (SQLException e) {
             LOGGER.error("get car by id SQL error " + e);
             return null;
         }
     }
 
-    @Override@Deprecated
+    @Override
+    @Deprecated
     public List<Car> getAllCars() {
 
         List<Car> cars = new ArrayList<>();
-        try (Connection connection = ds.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(BUNDLE.getString("GET_ALL_CARS"));
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(BUNDLE.getString("GET_ALL_CARS"))) {
             while (rs.next()) {
                 cars.add(getCarFromResultSet(rs));
             }
@@ -63,10 +62,10 @@ public class MySQLCarsDAO implements CarsDAO {
         return cars;
     }
 
-    @Override public List<Car> filterAndGetCars(CarFilter carFilter) {
+    @Override
+    public List<Car> filterAndGetCars(CarFilter carFilter) {
         List<Car> cars = new ArrayList<>();
-        try (Connection connection = ds.getConnection();
-             PreparedStatement statement =
+        try (PreparedStatement statement =
                      connection.prepareStatement(BUNDLE.getString("GET_CARS_FILTER"))) {
             statement.setDate(1, Date.valueOf(carFilter.getSelectedStartDate()));
             statement.setDate(2, Date.valueOf(carFilter.getSelectedEndDate()));
@@ -89,6 +88,7 @@ public class MySQLCarsDAO implements CarsDAO {
             while (rs.next()) {
                 cars.add(getCarFromResultSet(rs));
             }
+            rs.close();
         } catch (SQLException e) {
             LOGGER.error("get all filtered cars SQL error " + e);
             return null;
@@ -123,12 +123,11 @@ public class MySQLCarsDAO implements CarsDAO {
         return car;
     }
 
-    @Override public List<Integer> getAllYears() {
+    @Override
+    public List<Integer> getAllYears() {
         List<Integer> years = new ArrayList<>();
-        try (Connection connection = ds.getConnection();
-             Statement statement =
-                     connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(BUNDLE.getString("GET_ALL_CAR_YEARS"));
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(BUNDLE.getString("GET_ALL_CAR_YEARS"))) {
             while (rs.next()) {
                 years.add(rs.getInt("year"));
             }
@@ -139,10 +138,10 @@ public class MySQLCarsDAO implements CarsDAO {
         }
     }
 
-    @Override public boolean checkAvailability(Integer carId, LocalDate start, LocalDate end) {
+    @Override
+    public boolean checkAvailability(Integer carId, LocalDate start, LocalDate end) {
 
-        try (Connection connection = ds.getConnection();
-             PreparedStatement statement =
+        try (PreparedStatement statement =
                      connection.prepareStatement(BUNDLE.getString("GET_CARS_AVAILABILITY"))) {
 
             statement.setDate(1, Date.valueOf(start));
@@ -152,19 +151,20 @@ public class MySQLCarsDAO implements CarsDAO {
             statement.setString(5, carId.toString());
             LOGGER.debug("check availability car by id and start and date = " + statement);
             ResultSet rs = statement.executeQuery();
-            return rs.next();
+            boolean result = rs.next();
+            rs.close();
+            return result;
         } catch (SQLException e) {
             LOGGER.error("get car by id SQL error " + e);
             return false;
         }
-
     }
 
-    @Override public List<Integer> getAllFuelTypes() {
+    @Override
+    public List<Integer> getAllFuelTypes() {
         List<Integer> fuelTypes = new ArrayList<>();
-        try (Connection connection = ds.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(BUNDLE.getString("GET_ALL_CAR_FUEL_TYPES"));
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(BUNDLE.getString("GET_ALL_CAR_FUEL_TYPES"))) {
             while (rs.next()) {
                 fuelTypes.add(rs.getInt("fuel_type"));
             }

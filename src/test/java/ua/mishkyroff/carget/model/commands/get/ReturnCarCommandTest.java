@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import ua.mishkyroff.carget.controller.*;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.dao.OrdersDAO;
 import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.commands.Command;
@@ -22,7 +22,7 @@ public class ReturnCarCommandTest extends Mockito{
 
     private static Command command;
     private static IRequestWrapper wrapper;
-    private static AbstractDAOFactory daoFactory;
+    private static DAOManager daoManager;
     private static OrdersDAO ordersDAO;
     private static Order order;
 
@@ -31,7 +31,7 @@ public class ReturnCarCommandTest extends Mockito{
     public void setUp() throws Exception {
         command = new ReturnCarCommand();
         wrapper = mock(RequestWrapper.class);
-        daoFactory = mock(AbstractDAOFactory.class);
+        daoManager = mock(DAOManager.class);
         ordersDAO = mock(OrdersDAO.class);
         order = mock(Order.class);
     }
@@ -46,12 +46,12 @@ public class ReturnCarCommandTest extends Mockito{
     public void parametersCorrect() throws Exception {
         String orderId = "1";
         when(wrapper.getParameter("order_id")).thenReturn(orderId);
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getOrdersDAO()).thenReturn(ordersDAO);
         when(ordersDAO.getOrderById(Integer.parseInt(orderId))).thenReturn(order);
 
         View page = command.execute(wrapper);
-        assertEquals(page, View.ADMIN_RETURN_CAR);
+        assertEquals(View.ADMIN_RETURN_CAR, page);
         verify(wrapper, times(1)).setRequestAttribute(RequestAttributes.ORDER, order);
     }
 
@@ -61,7 +61,7 @@ public class ReturnCarCommandTest extends Mockito{
         when(wrapper.getParameter("order_id")).thenReturn(orderId);
 
         View page = command.execute(wrapper);
-        assertEquals(page, View.ADMIN_APPROVED_ORDERS);
+        assertEquals(View.ADMIN_APPROVED_ORDERS, page);
         verify(wrapper, times(1)).setSessionAttribute(SessionAttributes.MESSAGE, FIRSTLY_CHOOSE_ORDER);
     }
 }

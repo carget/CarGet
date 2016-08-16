@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.dao.OrdersDAO;
 import ua.mishkyroff.carget.entities.*;
 
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,16 +20,16 @@ public class MySQLOrdersDAO implements OrdersDAO {
     private final static ResourceBundle BUNDLE = ResourceBundle.getBundle("sql_statements");
     private static final Logger LOGGER = LogManager.getLogger("toConsole");
 
-    private final DataSource ds;
+    private final Connection connection;
 
-    public MySQLOrdersDAO(DataSource ds) {
-        this.ds = ds;
+    public MySQLOrdersDAO(Connection connection) {
+        this.connection = connection;
     }
 
-    @Override public List<Order> getAllOrdersByUserId(int userId) {
+    @Override
+    public List<Order> getAllOrdersByUserId(int userId) {
         List<Order> orders = new ArrayList<>();
-        try (Connection connection = ds.getConnection();
-             PreparedStatement statement =
+        try (PreparedStatement statement =
                      connection.prepareStatement(BUNDLE.getString("GET_ALL_ORDERS_BY_USER_ID"))) {
 
             statement.setInt(1, userId);
@@ -39,6 +38,7 @@ public class MySQLOrdersDAO implements OrdersDAO {
                 Order order = createOrderFromParameters(rs);
                 orders.add(order);
             }
+            rs.close();
         } catch (SQLException e) {
             LOGGER.error("get order by user id SQL error " + e);
             return null;
@@ -46,9 +46,9 @@ public class MySQLOrdersDAO implements OrdersDAO {
         return orders;
     }
 
-    @Override public boolean addOrder(Order order) {
-        try (Connection conn = ds.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(BUNDLE.getString("INSERT_ORDER"));
+    @Override
+    public boolean addOrder(Order order) {
+        try (PreparedStatement ps = connection.prepareStatement(BUNDLE.getString("INSERT_ORDER"))) {
             ps.setInt(1, order.getUser().getId());
             ps.setInt(2, order.getCar().getIdCar());
             ps.setDate(3, Date.valueOf(order.getStartDate()));
@@ -69,16 +69,15 @@ public class MySQLOrdersDAO implements OrdersDAO {
     @Override
     public List<Order> getAllOrdersByStatus(int status) {
         List<Order> orders = new ArrayList<>();
-        try (Connection connection = ds.getConnection();
-             PreparedStatement statement =
+        try (PreparedStatement statement =
                      connection.prepareStatement(BUNDLE.getString("GET_ALL_ORDERS_BY_STATUS"))) {
-
             statement.setInt(1, status);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 Order order = createOrderFromParameters(rs);
                 orders.add(order);
             }
+            rs.close();
         } catch (SQLException e) {
             LOGGER.error("get order by status id SQL error " + e);
             return null;
@@ -133,9 +132,9 @@ public class MySQLOrdersDAO implements OrdersDAO {
         return order;
     }
 
-    @Override public boolean setOrderStatusById(Integer orderId, int status) {
-        try (Connection connection = ds.getConnection();
-             PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("SET_ORDER_STATUS_BY_ID"))) {
+    @Override
+    public boolean setOrderStatusById(Integer orderId, int status) {
+        try (PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("SET_ORDER_STATUS_BY_ID"))) {
             statement.setInt(1, status);
             statement.setInt(2, orderId);
             return statement.executeUpdate() > 0;
@@ -145,10 +144,10 @@ public class MySQLOrdersDAO implements OrdersDAO {
         }
     }
 
-    @Override public boolean setOrderStatusCommentById(Integer orderId, int status, String comment) {
-        try (Connection connection = ds.getConnection();
-             PreparedStatement statement = connection.prepareStatement(BUNDLE.getString
-                     ("SET_ORDER_STATUS_COMMENT_BY_ID"))) {
+    @Override
+    public boolean setOrderStatusCommentById(Integer orderId, int status, String comment) {
+        try (PreparedStatement statement = connection.prepareStatement(BUNDLE.getString
+                ("SET_ORDER_STATUS_COMMENT_BY_ID"))) {
             statement.setInt(1, status);
             statement.setString(2, comment);
             statement.setInt(3, orderId);
@@ -159,10 +158,11 @@ public class MySQLOrdersDAO implements OrdersDAO {
         }
     }
 
-    @Override public boolean setOrderStatusCommentFineById(Integer orderId, int status, String
+    @Override
+    public boolean setOrderStatusCommentFineById(Integer orderId, int status, String
             comment, BigDecimal fine) {
-        try (Connection connection = ds.getConnection();
-             PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("SET_ORDER_STATUS_COMMENT_FINE_BY_ID"))) {
+        try (PreparedStatement statement =
+                     connection.prepareStatement(BUNDLE.getString("SET_ORDER_STATUS_COMMENT_FINE_BY_ID"))) {
             statement.setInt(1, status);
             statement.setString(2, comment);
             statement.setBigDecimal(3, fine);
@@ -175,24 +175,27 @@ public class MySQLOrdersDAO implements OrdersDAO {
         }
     }
 
-    @Override public Order getOrderById(Integer orderId) {
-        try (Connection connection = ds.getConnection();
+    @Override
+    public Order getOrderById(Integer orderId) {
+        try (Connection connection = this.connection;
              PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("GET_ORDER_BY_ID"))) {
 
             statement.setInt(1, orderId);
             ResultSet rs = statement.executeQuery();
+            Order order = null;
             if (rs.next()) {
-                return createOrderFromParameters(rs);
-            } else {
-                return null;
+                order = createOrderFromParameters(rs);
             }
+            rs.close();
+            return order;
         } catch (SQLException e) {
             LOGGER.error("Error by getting order by id");
             return null;
         }
     }
 
-    @Override public Integer getOrderStatusById(Integer orderId) {
+    @Override
+    public Integer getOrderStatusById(Integer orderId) {
         Order order = getOrderById(orderId);
         if (order != null) {
             return order.getStatus();

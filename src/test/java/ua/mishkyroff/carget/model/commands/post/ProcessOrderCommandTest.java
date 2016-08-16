@@ -13,8 +13,8 @@ import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.RequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.CarsDAO;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.dao.OrdersDAO;
 import ua.mishkyroff.carget.dao.UsersDAO;
 import ua.mishkyroff.carget.entities.Car;
@@ -40,7 +40,7 @@ import static ua.mishkyroff.carget.model.Messages.ORDER_ADDED_SUCCESSFULLY;
 public class ProcessOrderCommandTest extends Mockito {
 
     private static IRequestWrapper wrapper;
-    private static AbstractDAOFactory daoFactory;
+    private static DAOManager daoManager;
     private static CarsDAO carsDAO;
     private static OrdersDAO ordersDAO;
     private static UsersDAO usersDAO;
@@ -54,17 +54,17 @@ public class ProcessOrderCommandTest extends Mockito {
         command = new ProcessOrderCommand();
         period = spy(new RentPeriod());
         wrapper = mock(RequestWrapper.class);
-        daoFactory = mock(AbstractDAOFactory.class);
+        daoManager = mock(DAOManager.class);
         usersDAO = mock(UsersDAO.class);
         ordersDAO = mock(OrdersDAO.class);
         carsDAO = mock(CarsDAO.class);
         car = getDefaultCar();
         when(wrapper.getParameter("car_id")).thenReturn("1");
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getCarsDAO()).thenReturn(carsDAO);
-        when(daoFactory.getUsersDAO()).thenReturn(usersDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getCarsDAO()).thenReturn(carsDAO);
+        when(daoManager.getUsersDAO()).thenReturn(usersDAO);
         when(usersDAO.getUserById(anyInt())).thenReturn(user);
-        when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
+        when(daoManager.getOrdersDAO()).thenReturn(ordersDAO);
         when(carsDAO.getCarById(anyInt())).thenReturn(car);
     }
 
@@ -76,7 +76,7 @@ public class ProcessOrderCommandTest extends Mockito {
     public void tearDown() throws Exception {
         command = null;
         wrapper = null;
-        daoFactory = null;
+        daoManager = null;
         carsDAO = null;
         ordersDAO = null;
         usersDAO = null;

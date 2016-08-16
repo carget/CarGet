@@ -5,8 +5,7 @@ import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
-import ua.mishkyroff.carget.dao.UsersDAO;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.entities.User;
 import ua.mishkyroff.carget.entities.UserRole;
 import ua.mishkyroff.carget.model.Messages;
@@ -34,9 +33,9 @@ public class LoginCommand implements Command {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_INVALID_USER);
             return View.INDEX;
         }
-        AbstractDAOFactory daoFactory = wrapper.getDAOFactory();
-        UsersDAO userDao = daoFactory.getUsersDAO();
-        User user = userDao.getUserByEmail(email);
+        DAOManager daoManager = wrapper.getDAOManager();
+        User user = (User) daoManager.openExecuteAndClose(
+                manager -> manager.getUsersDAO().getUserByEmail(email));
         if (user != null && password.equals(user.getPassword())) { //valid user
             LOGGER.debug("Valid user");
             wrapper.setSessionAttribute(SessionAttributes.USER_ROLE,

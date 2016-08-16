@@ -8,7 +8,7 @@ import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.RequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.dao.OrdersDAO;
 import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.Messages;
@@ -21,25 +21,25 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Anton Mishkyroff
  */
-public class CancelOrderCommandTest extends Mockito{
+public class CancelOrderCommandTest extends Mockito {
 
     private static Command command;
     private static IRequestWrapper wrapper;
-    private static AbstractDAOFactory daoFactory;
+    private static DAOManager daoManager;
     private static OrdersDAO ordersDAO;
 
     @Before
     public void setUp() throws Exception {
         command = new CancelOrderCommand();
         wrapper = mock(RequestWrapper.class);
-        daoFactory = mock(AbstractDAOFactory.class);
+        daoManager = mock(DAOManager.class);
         ordersDAO = mock(OrdersDAO.class);
     }
 
     @After
     public void tearDown() throws Exception {
         command = null;
-        daoFactory = null;
+        daoManager = null;
         ordersDAO = null;
     }
 
@@ -49,13 +49,13 @@ public class CancelOrderCommandTest extends Mockito{
         String reason = "reason";
         when(wrapper.getParameter("order_id")).thenReturn(orderId);
         when(wrapper.getParameter("reason")).thenReturn(reason);
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getOrdersDAO()).thenReturn(ordersDAO);
         when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.APPROVED);
         when(ordersDAO.setOrderStatusCommentById(Integer.parseInt(orderId), Order.CANCELED, reason))
                 .thenReturn(true);
         View page = command.execute(wrapper);
-        assertEquals(View.ADMIN_APPROVED_ORDERS,page);
+        assertEquals(View.ADMIN_APPROVED_ORDERS, page);
         verify(wrapper, times(0)).setSessionAttribute(any(SessionAttributes.class), anyString());
 
     }
@@ -66,13 +66,13 @@ public class CancelOrderCommandTest extends Mockito{
         String reason = "reason";
         when(wrapper.getParameter("order_id")).thenReturn(orderId);
         when(wrapper.getParameter("reason")).thenReturn(reason);
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getOrdersDAO()).thenReturn(ordersDAO);
         when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.NEW);
         when(ordersDAO.setOrderStatusCommentById(Integer.parseInt(orderId), Order.CANCELED, reason))
                 .thenReturn(true);
         View page = command.execute(wrapper);
-        assertEquals(View.ADMIN_APPROVED_ORDERS,page);
+        assertEquals(View.ADMIN_APPROVED_ORDERS, page);
         verify(wrapper, times(1)).setSessionAttribute(SessionAttributes.MESSAGE,
                 Messages.ERROR_CANCELING_ORDER);
     }
@@ -82,7 +82,7 @@ public class CancelOrderCommandTest extends Mockito{
         String orderId = null;
         when(wrapper.getParameter("order_id")).thenReturn(orderId);
         View page = command.execute(wrapper);
-        assertEquals(View.ADMIN_APPROVED_ORDERS , page);
+        assertEquals(View.ADMIN_APPROVED_ORDERS, page);
         verify(wrapper, times(1)).setSessionAttribute(SessionAttributes.MESSAGE, Messages.FIRSTLY_CHOOSE_ORDER);
 
     }
@@ -94,7 +94,7 @@ public class CancelOrderCommandTest extends Mockito{
         when(wrapper.getParameter("order_id")).thenReturn(orderId);
         when(wrapper.getParameter("reason")).thenReturn(reason);
         View page = command.execute(wrapper);
-        assertEquals(View.ADMIN_APPROVED_ORDERS , page);
+        assertEquals(View.ADMIN_APPROVED_ORDERS, page);
         verify(wrapper, times(1)).setSessionAttribute(SessionAttributes.MESSAGE,
                 Messages.ERROR_ENTER_REASON_FOR_CANCEL);
 

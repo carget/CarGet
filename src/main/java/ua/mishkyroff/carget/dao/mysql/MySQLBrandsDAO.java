@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.dao.BrandsDAO;
 import ua.mishkyroff.carget.entities.Brand;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,20 +19,20 @@ import java.util.ResourceBundle;
  * @author Anton Mishkyroff
  */
 public class MySQLBrandsDAO implements BrandsDAO {
-    private final DataSource ds;
+    private final Connection connection;
     private static final Logger LOGGER_SQL = LogManager.getLogger("toConsole");
     private static final ResourceBundle bundle = ResourceBundle.getBundle("sql_statements");
 
-    public MySQLBrandsDAO(DataSource ds) {
-        this.ds = ds;
+    public MySQLBrandsDAO(Connection connection) {
+        this.connection = connection;
     }
 
-    @Override public List<Brand> getAllBrands() {
+    @Override
+    public List<Brand> getAllBrands() {
 
         List<Brand> brands = new ArrayList<>();
-        try (Connection connection = ds.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(bundle.getString("GET_ALL_BRANDS"));
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(bundle.getString("GET_ALL_BRANDS"))) {
             while (rs.next()) {
                 Brand brand = new Brand(
                         rs.getInt("brand_id"),

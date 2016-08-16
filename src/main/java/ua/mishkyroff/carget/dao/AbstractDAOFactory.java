@@ -18,13 +18,5 @@ public abstract class AbstractDAOFactory {
         }
     }
 
-    public abstract UsersDAO getUsersDAO();
-
-    public abstract CarsDAO getCarsDAO();
-
-    public abstract OrdersDAO getOrdersDAO();
-
-    public abstract BrandsDAO getBrandsDAO();
-
-    public abstract CheckDBDAO getInitDBDAO();
+    public abstract DAOManager getDAOManager();
 }

@@ -1,6 +1,6 @@
 package ua.mishkyroff.carget.controller;
 
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
 
 /**
  * Interface {@code IRequestWrapper}
@@ -33,5 +33,5 @@ public interface IRequestWrapper {
 
     String getHeader(String name);
 
-    AbstractDAOFactory getDAOFactory();
+    DAOManager getDAOManager();
 }

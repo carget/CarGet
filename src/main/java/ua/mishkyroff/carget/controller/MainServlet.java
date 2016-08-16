@@ -40,8 +40,6 @@ public class MainServlet extends HttpServlet {
         try {
             LOGGER.debug("-----POST----- REDIRECT to " + view);
             response.sendRedirect(view.getURI());
-            //TODO remove ---v
-            LOGGER.error("after redirect " + view);
         } catch (IOException e) {
             LOGGER.error("Error during processing POST request " + e.getMessage());
         }
@@ -64,11 +62,9 @@ public class MainServlet extends HttpServlet {
                 String forwardPath = view.getJspPath();
                 LOGGER.debug("-----GET----- FORWARD to " + forwardPath);
                 request.getRequestDispatcher(forwardPath).forward(request, response);
-                LOGGER.error("after forward " + view);
             } else {
                 LOGGER.debug("-----GET----- REDIRECT to " + view);
                 response.sendRedirect(view.getURI());
-                LOGGER.error("after redirect " + view);
             }
         } catch (ServletException | IOException e) {
             LOGGER.error("Error during processing GET request " + e.getMessage());

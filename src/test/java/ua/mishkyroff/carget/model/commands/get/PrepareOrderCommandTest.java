@@ -5,8 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import ua.mishkyroff.carget.controller.*;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.CarsDAO;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.entities.Car;
 import ua.mishkyroff.carget.model.commands.Command;
 
@@ -23,7 +23,7 @@ import static ua.mishkyroff.carget.model.Messages.ERROR_CHOOSING_CAR;
 public class PrepareOrderCommandTest extends Mockito {
 
     private static Command command;
-    private static AbstractDAOFactory daoFactory;
+    private static DAOManager daoManager;
     private static CarsDAO carsDAO;
     private static IRequestWrapper wrapper;
     private static Car car;
@@ -35,7 +35,7 @@ public class PrepareOrderCommandTest extends Mockito {
     public void setUp() throws Exception {
         wrapper = mock(RequestWrapper.class);
         command = new PrepareOrderCommand();
-        daoFactory = mock(AbstractDAOFactory.class);
+        daoManager = mock(DAOManager.class);
         carsDAO = mock(CarsDAO.class);
         car = mock(Car.class);
         startDate = LocalDate.now();
@@ -46,7 +46,7 @@ public class PrepareOrderCommandTest extends Mockito {
     public void tearDown() throws Exception {
         wrapper = null;
         command = null;
-        daoFactory = null;
+        daoManager = null;
         carsDAO = null;
         car = null;
     }
@@ -58,13 +58,13 @@ public class PrepareOrderCommandTest extends Mockito {
         when(wrapper.getParameter("start_date")).thenReturn(startDate.toString());
         when(wrapper.getParameter("end_date")).thenReturn(endDate.toString());
         when(wrapper.getParameter("car_id")).thenReturn(carId);
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getCarsDAO()).thenReturn(carsDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getCarsDAO()).thenReturn(carsDAO);
         when(carsDAO.getCarById(Integer.parseInt(carId))).thenReturn(car);
 
         View page = command.execute(wrapper);
 
-        assertEquals(page, View.USER_PREPARE_ORDER);
+        assertEquals(View.USER_PREPARE_ORDER, page);
         verify(wrapper, times(1)).setRequestAttribute(RequestAttributes.CAR, car);
         verify(wrapper, times(1)).setRequestAttribute(RequestAttributes.START_DATE, startDate);
         verify(wrapper, times(1)).setRequestAttribute(RequestAttributes.END_DATE, endDate);
@@ -78,13 +78,13 @@ public class PrepareOrderCommandTest extends Mockito {
         when(wrapper.getParameter("start_date")).thenReturn(null);
         when(wrapper.getParameter("end_date")).thenReturn(endDate.toString());
         when(wrapper.getParameter("car_id")).thenReturn(carId);
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getCarsDAO()).thenReturn(carsDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getCarsDAO()).thenReturn(carsDAO);
         when(carsDAO.getCarById(Integer.parseInt(carId))).thenReturn(car);
 
         View page = command.execute(wrapper);
 
-        assertEquals(page, View.CHOOSE_AUTO);
+        assertEquals(View.CHOOSE_AUTO, page);
         verify(wrapper, times(1)).setSessionAttribute(SessionAttributes.MESSAGE, ERROR_CHOOSING_CAR);
         verify(wrapper, times(0)).setRequestAttribute(RequestAttributes.CAR, car);
         verify(wrapper, times(0)).setRequestAttribute(RequestAttributes.START_DATE, startDate);
@@ -97,13 +97,13 @@ public class PrepareOrderCommandTest extends Mockito {
         when(wrapper.getParameter("start_date")).thenReturn(startDate.toString());
         when(wrapper.getParameter("end_date")).thenReturn(endDate.toString());
         when(wrapper.getParameter("car_id")).thenReturn(carId);
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getCarsDAO()).thenReturn(carsDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getCarsDAO()).thenReturn(carsDAO);
         when(carsDAO.getCarById(Integer.parseInt(carId))).thenReturn(null);
 
         View page = command.execute(wrapper);
 
-        assertEquals(page, View.CHOOSE_AUTO);
+        assertEquals(View.CHOOSE_AUTO, page);
         verify(wrapper, times(1)).setSessionAttribute(SessionAttributes.MESSAGE, ERROR_CHOOSING_CAR);
         verify(wrapper, times(0)).setRequestAttribute(RequestAttributes.CAR, car);
         verify(wrapper, times(0)).setRequestAttribute(RequestAttributes.START_DATE, startDate);

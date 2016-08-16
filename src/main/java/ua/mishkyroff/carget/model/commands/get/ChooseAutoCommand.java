@@ -6,7 +6,8 @@ import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.RequestAttributes;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
+import ua.mishkyroff.carget.dao.Exceptions.DBException;
 import ua.mishkyroff.carget.entities.Car;
 import ua.mishkyroff.carget.model.CarFilter;
 import ua.mishkyroff.carget.model.commands.Command;
@@ -29,10 +30,10 @@ public class ChooseAutoCommand implements Command {
     @Override
     public View execute(IRequestWrapper wrapper) {
         //create and init filter object with default params
-        AbstractDAOFactory daoFactory = wrapper.getDAOFactory();
+        DAOManager daoManager = wrapper.getDAOManager();
         CarFilter carFilter = (CarFilter) wrapper.getRequestAttribute(RequestAttributes.CAR_FILTER);
         if (carFilter == null) {
-            carFilter = new CarFilter(daoFactory);
+            carFilter = new CarFilter(daoManager);
         }
         //set filter's params from request to filter object
         carFilter.setSelectedBrandId(wrapper.getParameter("brand_id"));
@@ -47,10 +48,21 @@ public class ChooseAutoCommand implements Command {
         if (carFilter.haveUnreadError()) {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, carFilter.getError());
         }
-
         //update filter and filtered cars objects
         wrapper.setRequestAttribute(RequestAttributes.CAR_FILTER, carFilter);
-        List<Car> cars = daoFactory.getCarsDAO().filterAndGetCars(carFilter);
+
+        List<Car> cars = null;
+        try {
+            daoManager.openConnection();
+            cars = daoManager.getCarsDAO().filterAndGetCars(carFilter);
+        } catch (DBException e) {
+            LOGGER.error(e);
+        } finally {
+            daoManager.closeConnection();
+        }
+        if (cars == null) {
+            return View.INDEX;
+        }
         wrapper.setRequestAttribute(RequestAttributes.CARS, cars);
         return View.CHOOSE_AUTO;
     }

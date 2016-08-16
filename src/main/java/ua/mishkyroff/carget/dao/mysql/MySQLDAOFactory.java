@@ -25,18 +25,12 @@ public class MySQLDAOFactory extends AbstractDAOFactory {
     private static final MySQLDAOFactory INSTANCE = new MySQLDAOFactory();
     private DataSource ds;
 
-    private volatile UsersDAO instanceUsersDAO;
-    private volatile CarsDAO instanceCarsDAO;
-    private volatile OrdersDAO instanceOrdersDAO;
-    private volatile BrandsDAO instanceBrandsDAO;
-    private volatile CheckDBDAO instanceCheckDBDAO;
-
     private MySQLDAOFactory() {
         try {
             InitialContext initialContext = new InitialContext();
             ds = (DataSource) initialContext.lookup("java:comp/env/jdbc/carget");
         } catch (NamingException e) {
-            LOGGER.error("Error during DataSource initialization " + e.getMessage());
+            LOGGER.fatal("Error during DataSource initialization " + e.getMessage());
         }
     }
 
@@ -44,102 +38,8 @@ public class MySQLDAOFactory extends AbstractDAOFactory {
         return INSTANCE;
     }
 
-    /**
-     * Method uses lazy initialization and double checked locking & volatile to improve performance
-     *
-     * @return UsersDAO singleton object
-     */
     @Override
-    public UsersDAO getUsersDAO() {
-
-        UsersDAO localUsersDAO = instanceUsersDAO;
-        if (localUsersDAO == null) {
-            synchronized (UsersDAO.class) {
-                localUsersDAO = instanceUsersDAO;
-                if (localUsersDAO == null) {
-                    instanceUsersDAO = localUsersDAO = new MySQLUsersDAO(ds);
-                }
-            }
-        }
-        return localUsersDAO;
-    }
-
-    /**
-     * Method uses lazy initialization and double checked locking & volatile to improve performance
-     *
-     * @return CarsDAO singleton object
-     */
-    @Override
-    public synchronized CarsDAO getCarsDAO() {
-
-        CarsDAO localCarsDAO = instanceCarsDAO;
-        if (localCarsDAO == null) {
-            synchronized (CarsDAO.class) {
-                localCarsDAO = instanceCarsDAO;
-                if (localCarsDAO == null) {
-                    instanceCarsDAO = localCarsDAO = new MySQLCarsDAO(ds);
-                }
-            }
-        }
-        return localCarsDAO;
-    }
-
-    /**
-     * Method uses lazy initialization and double checked locking & volatile to improve performance
-     *
-     * @return OrdersDAO singleton object
-     */
-    @Override
-    public synchronized OrdersDAO getOrdersDAO() {
-
-        OrdersDAO localOrdersDAO = instanceOrdersDAO;
-        if (localOrdersDAO == null) {
-            synchronized (OrdersDAO.class) {
-                localOrdersDAO = instanceOrdersDAO;
-                if (localOrdersDAO == null) {
-                    instanceOrdersDAO = localOrdersDAO = new MySQLOrdersDAO(ds);
-                }
-            }
-        }
-        return localOrdersDAO;
-    }
-
-    /**
-     * Method uses lazy initialization and double checked locking & volatile to improve performance
-     *
-     * @return BrandsDAO singleton object
-     */
-    @Override
-    public synchronized BrandsDAO getBrandsDAO() {
-
-        BrandsDAO localBrandsDAO = instanceBrandsDAO;
-        if (localBrandsDAO == null) {
-            synchronized (BrandsDAO.class) {
-                localBrandsDAO = instanceBrandsDAO;
-                if (localBrandsDAO == null) {
-                    instanceBrandsDAO = localBrandsDAO = new MySQLBrandsDAO(ds);
-                }
-            }
-        }
-        return localBrandsDAO;
-    }
-
-    /**
-     * Method uses lazy initialization and double checked locking & volatile to improve performance
-     *
-     * @return CheckDBDAO singleton object
-     */
-    @Override
-    public synchronized CheckDBDAO getInitDBDAO() {
-        CheckDBDAO localCheckDBDAO = instanceCheckDBDAO;
-        if (localCheckDBDAO == null) {
-            synchronized (CheckDBDAO.class) {
-                localCheckDBDAO = instanceCheckDBDAO;
-                if (localCheckDBDAO == null) {
-                    instanceCheckDBDAO = localCheckDBDAO = new MySQLCheckDBDAO(ds);
-                }
-            }
-        }
-        return localCheckDBDAO;
+    public DAOManager getDAOManager() {
+        return new MySQLDAOManager(ds);
     }
 }

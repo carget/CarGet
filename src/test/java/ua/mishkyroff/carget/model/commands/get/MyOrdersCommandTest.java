@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import ua.mishkyroff.carget.controller.*;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.dao.OrdersDAO;
 import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.commands.Command;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class MyOrdersCommandTest extends Mockito{
     private static IRequestWrapper wrapper;
-    private static AbstractDAOFactory daoFactory;
+    private static DAOManager daoManager;
     private static OrdersDAO ordersDAO;
     private static List<Order> orderList;
     private static Command command;
@@ -30,7 +30,7 @@ public class MyOrdersCommandTest extends Mockito{
     @Before
     public void setUp() throws Exception {
         wrapper = mock(RequestWrapper.class);
-        daoFactory = mock(AbstractDAOFactory.class);
+        daoManager = mock(DAOManager.class);
         ordersDAO = mock(OrdersDAO.class);
         command = new  MyOrdersCommand();
         orderList = new ArrayList<>();
@@ -39,7 +39,7 @@ public class MyOrdersCommandTest extends Mockito{
     @After
     public void tearDown() throws Exception {
         wrapper = null;
-        daoFactory = null;
+        daoManager = null;
         ordersDAO = null;
         command = null;
     }
@@ -47,14 +47,14 @@ public class MyOrdersCommandTest extends Mockito{
     @Test
     public void execute() throws Exception {
         final Integer userId = 1;
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
         when(wrapper.getSessionAttribute(SessionAttributes.USER_ID)).thenReturn(userId);
-        when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
+        when(daoManager.getOrdersDAO()).thenReturn(ordersDAO);
         when(ordersDAO.getAllOrdersByUserId(userId)).thenReturn(orderList);
 
         View page = command.execute(wrapper);
 
-        assertEquals(page, View.USER_MY_ORDERS);
+        assertEquals(View.USER_MY_ORDERS, page);
         verify(wrapper, times(1)).setRequestAttribute(RequestAttributes.ORDERS, orderList);
     }
 }

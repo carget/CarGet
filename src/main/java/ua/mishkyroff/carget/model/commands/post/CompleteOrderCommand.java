@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.Messages;
 import ua.mishkyroff.carget.model.commands.Command;
@@ -34,15 +34,19 @@ public class CompleteOrderCommand implements Command {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_COMPLETING_ORDER);
             return View.INDEX;
         }
-        String comment = wrapper.getParameter("comment");
-        comment = (comment == null) ? "" : comment;
+        String parameter = wrapper.getParameter("comment");
+        final String comment = (parameter == null) ? "" : parameter;
         Integer orderIdInt = Integer.parseInt(orderId);
-        AbstractDAOFactory daoFactory = wrapper.getDAOFactory();
-        Integer orderStatus = daoFactory.getOrdersDAO().getOrderStatusById(orderIdInt);
-        if (orderStatus == Order.PAID) {
-            if (daoFactory.getOrdersDAO()
-                    .setOrderStatusCommentFineById(Integer.valueOf(orderId), Order.COMPLETED,
-                            comment, new BigDecimal(fine))) {
+        DAOManager daoManager = wrapper.getDAOManager();
+        //todo transaction!
+        Integer orderStatus = (Integer) daoManager.openExecuteAndClose(
+                manager -> manager.getOrdersDAO().getOrderStatusById(orderIdInt));
+        if (orderStatus!=null && orderStatus == Order.PAID) {
+            boolean result = (boolean) daoManager.openExecuteAndClose(
+                    manager -> manager.getOrdersDAO()
+                            .setOrderStatusCommentFineById(Integer.valueOf(orderId), Order.COMPLETED,
+                            comment, new BigDecimal(fine)));
+            if (result) {
                 LOGGER.debug("Order completed!");
                 return View.ADMIN_COMPLETED_ORDERS;
             }

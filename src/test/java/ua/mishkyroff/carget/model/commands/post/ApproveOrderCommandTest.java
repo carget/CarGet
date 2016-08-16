@@ -8,7 +8,7 @@ import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.RequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.dao.OrdersDAO;
 import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.commands.Command;
@@ -25,21 +25,21 @@ public class ApproveOrderCommandTest extends Mockito {
 
     private static Command command;
     private static IRequestWrapper wrapper;
-    private static AbstractDAOFactory daoFactory;
+    private static DAOManager daoManager;
     private static OrdersDAO ordersDAO;
 
     @Before
     public void setUp() throws Exception {
         command = new ApproveOrderCommand();
         wrapper = mock(RequestWrapper.class);
-        daoFactory = mock(AbstractDAOFactory.class);
+        daoManager = mock(DAOManager.class);
         ordersDAO = mock(OrdersDAO.class);
     }
 
     @After
     public void tearDown() throws Exception {
         command = null;
-        daoFactory = null;
+        daoManager = null;
         ordersDAO = null;
     }
 
@@ -47,11 +47,10 @@ public class ApproveOrderCommandTest extends Mockito {
     public void correctOrderIdAndStatus() throws Exception {
         String orderId = "1";
         when(wrapper.getParameter("order_id")).thenReturn(orderId);
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
-        when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.NEW);
-        when(ordersDAO.setOrderStatusById(Integer.parseInt(orderId), Order.APPROVED))
-                .thenReturn(true);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getOrdersDAO()).thenReturn(ordersDAO);
+        when(daoManager.getOrdersDAO().getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.NEW);
+        when(daoManager.getOrdersDAO().setOrderStatusById(Integer.parseInt(orderId), Order.APPROVED)).thenReturn(true);
         View page = command.execute(wrapper);
         assertEquals(page, View.ADMIN_NEW_ORDERS);
         verify(wrapper, times(0)).setSessionAttribute(any(SessionAttributes.class), anyString());
@@ -62,13 +61,13 @@ public class ApproveOrderCommandTest extends Mockito {
     public void correctOrderIdAndincorrectStatus() throws Exception {
         String orderId = "1";
         when(wrapper.getParameter("order_id")).thenReturn(orderId);
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getOrdersDAO()).thenReturn(ordersDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getOrdersDAO()).thenReturn(ordersDAO);
         when(ordersDAO.getOrderStatusById(Integer.parseInt(orderId))).thenReturn(Order.COMPLETED);
         when(ordersDAO.setOrderStatusById(Integer.parseInt(orderId), Order.APPROVED))
                 .thenReturn(true);
         View page = command.execute(wrapper);
-        assertEquals(page, View.INDEX);
+        assertEquals(View.INDEX, page);
         verify(wrapper, times(1)).setSessionAttribute(SessionAttributes.MESSAGE,
                 ERROR_APPROVING_ORDER);
 
@@ -79,7 +78,7 @@ public class ApproveOrderCommandTest extends Mockito {
         String orderId = null;
         when(wrapper.getParameter("order_id")).thenReturn(orderId);
         View page = command.execute(wrapper);
-        assertEquals(page, View.INDEX);
+        assertEquals(View.INDEX, page);
         verify(wrapper, times(1)).setSessionAttribute(SessionAttributes.MESSAGE,
                 ERROR_APPROVING_ORDER);
 

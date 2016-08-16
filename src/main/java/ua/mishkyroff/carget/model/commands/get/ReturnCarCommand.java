@@ -6,7 +6,8 @@ import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.RequestAttributes;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
+import ua.mishkyroff.carget.dao.Exceptions.DBException;
 import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.Messages;
 import ua.mishkyroff.carget.model.commands.Command;
@@ -30,9 +31,19 @@ public class ReturnCarCommand implements Command {
             return View.ADMIN_APPROVED_ORDERS;
         }
         Integer orderId = Integer.valueOf(orderIdFromRequest);
-
-        AbstractDAOFactory daoFactory = wrapper.getDAOFactory();
-        Order order = daoFactory.getOrdersDAO().getOrderById(orderId);
+        DAOManager daoManager = wrapper.getDAOManager();
+        Order order = null;
+        try {
+            daoManager.openConnection();
+            order = daoManager.getOrdersDAO().getOrderById(orderId);
+        } catch (DBException e) {
+            LOGGER.error(e);
+        } finally {
+            daoManager.closeConnection();
+        }
+        if (order == null) {
+            return View.INDEX;
+        }
         wrapper.setRequestAttribute(RequestAttributes.ORDER, order);
         return View.ADMIN_RETURN_CAR;
     }

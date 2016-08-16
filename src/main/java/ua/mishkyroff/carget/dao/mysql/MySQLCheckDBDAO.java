@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.dao.CheckDBDAO;
 import ua.mishkyroff.carget.dao.Exceptions.DBStructureError;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -22,11 +21,11 @@ import java.util.Set;
  * @throws DBStructureError
  */
 public class MySQLCheckDBDAO implements CheckDBDAO {
-    private final DataSource ds;
+    private final Connection connection;
     private static final Logger LOGGER = LogManager.getLogger("toConsole");
 
-    public MySQLCheckDBDAO(DataSource ds) {
-        this.ds = ds;
+    public MySQLCheckDBDAO(Connection connection) {
+        this.connection = connection;
     }
 
     /**
@@ -36,7 +35,6 @@ public class MySQLCheckDBDAO implements CheckDBDAO {
      * @throws DBStructureError - thrown if some or all tables are missing in database
      */
     @Override public void initAndCheckDB() throws SQLException, DBStructureError {
-        Connection connection = ds.getConnection();
         //check metainf table
         DatabaseMetaData metaData = connection.getMetaData();
         ResultSet rs = metaData.getTables(null, null, "%", null);
@@ -46,6 +44,7 @@ public class MySQLCheckDBDAO implements CheckDBDAO {
             realTables.add(tableName);
             LOGGER.debug("DB TABLE NAME=" + tableName);
         }
+        LOGGER.info("Default transaction isolation level is " + connection.getTransactionIsolation());
         Set<String> requiredTables = new HashSet<>();
         requiredTables.add("brands");
         requiredTables.add("cars");

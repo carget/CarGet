@@ -8,8 +8,8 @@ import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.RequestAttributes;
 import ua.mishkyroff.carget.controller.RequestWrapper;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.CarsDAO;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.entities.Car;
 import ua.mishkyroff.carget.model.commands.Command;
 
@@ -20,9 +20,9 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Anton Mishkyroff
  */
-public class CarInfoCommandTest extends Mockito{
+public class CarInfoCommandTest extends Mockito {
     private static IRequestWrapper wrapper;
-    private static AbstractDAOFactory daoFactory;
+    private static DAOManager daoManager;
     private static CarsDAO carsDAO;
     private static Car car;
     private static Command command;
@@ -30,7 +30,7 @@ public class CarInfoCommandTest extends Mockito{
     @Before
     public void setUp() throws Exception {
         wrapper = mock(RequestWrapper.class);
-        daoFactory = mock(AbstractDAOFactory.class);
+        daoManager = mock(DAOManager.class);
         carsDAO = mock(CarsDAO.class);
         command = new CarInfoCommand();
         car = mock(Car.class);
@@ -39,7 +39,7 @@ public class CarInfoCommandTest extends Mockito{
     @After
     public void tearDown() throws Exception {
         wrapper = null;
-        daoFactory = null;
+        daoManager = null;
         carsDAO = null;
         command = null;
     }
@@ -48,13 +48,13 @@ public class CarInfoCommandTest extends Mockito{
     public void notNullCarId() throws Exception {
         String carIdString = "1";
         when(wrapper.getParameter("car_id")).thenReturn(carIdString);
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getCarsDAO()).thenReturn(carsDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getCarsDAO()).thenReturn(carsDAO);
         when(carsDAO.getCarById(Integer.parseInt(carIdString))).thenReturn(car);
 
         View page = command.execute(wrapper);
 
-        assertEquals(page, View.CAR_INFO);
+        assertEquals(View.CAR_INFO, page);
         verify(wrapper, times(1)).setRequestAttribute(RequestAttributes.CAR, car);
     }
 
@@ -64,7 +64,7 @@ public class CarInfoCommandTest extends Mockito{
         when(wrapper.getParameter("car_id")).thenReturn(carIdString);
         View page = command.execute(wrapper);
 
-        assertEquals(page, View.INDEX);
+        assertEquals(View.INDEX, page);
         verify(wrapper, times(0)).setRequestAttribute(RequestAttributes.CAR, car);
     }
 }

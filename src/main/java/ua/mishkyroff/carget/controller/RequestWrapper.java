@@ -2,6 +2,7 @@ package ua.mishkyroff.carget.controller;
 
 
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -139,14 +140,12 @@ public class RequestWrapper implements IRequestWrapper {
     }
 
     /**
-     * Retrieves MySQLDAOFactory instance from ServletContext scope
+     * Retrieves new of DAOManager instance from DAOFactory (witch stored in ServletContext scope)
      *
-     * @return - MySQLDAOFactory instance
+     * @return - DAOManager instance
      */
     @Override
-    public AbstractDAOFactory getDAOFactory() {
-        return (AbstractDAOFactory) request.getServletContext().getAttribute("DAOFactory");
+    public DAOManager getDAOManager() {
+        return ((AbstractDAOFactory) request.getServletContext().getAttribute("DAOFactory")).getDAOManager();
     }
-
-
 }

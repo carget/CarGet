@@ -35,7 +35,7 @@ public class LogoutCommandTest extends Mockito{
     public void execute() throws Exception {
 
         View page = command.execute(wrapper);
-        assertEquals(page, View.INDEX);
+        assertEquals(View.INDEX, page);
         verify(wrapper,times(1)).invalidateSession();
 
     }

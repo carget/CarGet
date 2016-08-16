@@ -5,8 +5,9 @@ import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.CarsDAO;
+import ua.mishkyroff.carget.dao.DAOManager;
+import ua.mishkyroff.carget.dao.Exceptions.DBException;
 import ua.mishkyroff.carget.entities.Car;
 import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.entities.User;
@@ -46,31 +47,40 @@ public class ProcessOrderCommand implements Command {
         }
         LocalDate startDate = rentPeriod.getStartDate();
         LocalDate endDate = rentPeriod.getEndDate();
-        AbstractDAOFactory daoFactory = wrapper.getDAOFactory();
-        CarsDAO carsDAO = daoFactory.getCarsDAO();
-        Car car = carsDAO.getCarById(Integer.parseInt(carId));
-        if (car == null) {
-            wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.FIRSTLY_CHOOSE_AUTO);
-            return View.CHOOSE_AUTO;
+        DAOManager daoManager = wrapper.getDAOManager();
+        //todo Transaction!!!
+        try{
+            daoManager.openConnection();
+            CarsDAO carsDAO = daoManager.getCarsDAO();
+            Car car = carsDAO.getCarById(Integer.parseInt(carId));
+            if (car == null) {
+                wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.FIRSTLY_CHOOSE_AUTO);
+                return View.CHOOSE_AUTO;
+            }
+            User user = daoManager.getUsersDAO().getUserById((Integer) wrapper.getSessionAttribute(SessionAttributes.USER_ID));
+            //calculate price
+            BigDecimal totalPrice = rentPeriod.getTotalRent(car.getPricePerDay());
+            //TODO-------------- TRANSACTION!!!!
+            //check availability for selected car and dates
+            Boolean available = carsDAO.checkAvailability(car.getIdCar(), startDate, endDate);
+            if (!available) {
+                wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_CAR_IS_NOT_AVAILABLE_FOR_THIS_DATES);
+                return View.CHOOSE_AUTO;
+            }
+            Order order = new Order(user, car, startDate, endDate, "", totalPrice, new BigDecimal(0), Order.NEW);
+            if (daoManager.getOrdersDAO().addOrder(order)) {
+                wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ORDER_ADDED_SUCCESSFULLY);
+                LOGGER.debug("new order added");
+            } else {
+                wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_ORDER_NOT_ADDED_SUCCESSFULLY);
+                LOGGER.debug("new order NOT added");
+            }
+        } catch (DBException e) {
+            LOGGER.error(e);
+        }finally {
+            daoManager.closeConnection();
         }
-        //check availability for selected car and dates
-        Boolean available = carsDAO.checkAvailability(car.getIdCar(), startDate, endDate);
-        if (!available) {
-            wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_CAR_IS_NOT_AVAILABLE_FOR_THIS_DATES);
-            return View.CHOOSE_AUTO;
-        }
-        //calculate price
-        BigDecimal totalPrice = rentPeriod.getTotalRent(car.getPricePerDay());
-//        BigDecimal totalPrice = car.getPricePerDay().multiply(rentPeriod.getDiffDays());
-        User user = daoFactory.getUsersDAO().getUserById((Integer) wrapper.getSessionAttribute(SessionAttributes.USER_ID));
-        Order order = new Order(user, car, startDate, endDate, "", totalPrice, new BigDecimal(0), Order.NEW);
-        if (daoFactory.getOrdersDAO().addOrder(order)) {
-            wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ORDER_ADDED_SUCCESSFULLY);
-            LOGGER.debug("new order added");
-        } else {
-            wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_ORDER_NOT_ADDED_SUCCESSFULLY);
-            LOGGER.debug("new order NOT added");
-        }
+
         return View.USER_MY_ORDERS;
     }
 

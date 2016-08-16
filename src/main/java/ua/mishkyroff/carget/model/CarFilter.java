@@ -1,7 +1,10 @@
 package ua.mishkyroff.carget.model;
 
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.dao.CarsDAO;
+import ua.mishkyroff.carget.dao.DAOManager;
+import ua.mishkyroff.carget.dao.Exceptions.DBException;
 import ua.mishkyroff.carget.entities.Brand;
 import ua.mishkyroff.carget.entities.Car;
 
@@ -16,6 +19,9 @@ import java.util.List;
  * @see RentPeriod
  */
 public class CarFilter {
+
+    private static final Logger LOGGER = LogManager.getLogger("toConsole");
+
     private List<Brand> brands;
     private List<Integer> years;
     private List<Integer> fuelTypes;
@@ -33,11 +39,18 @@ public class CarFilter {
     /**
      * Create filter object with default parameters for car filtration
      */
-    public CarFilter(AbstractDAOFactory daoFactory) {
+    public CarFilter(DAOManager daoManager) {
         //default filtering params
-        this.brands = daoFactory.getBrandsDAO().getAllBrands();
-        this.years = daoFactory.getCarsDAO().getAllYears();
-        this.fuelTypes = daoFactory.getCarsDAO().getAllFuelTypes();
+        try {
+            daoManager.openConnection();
+            this.brands = daoManager.getBrandsDAO().getAllBrands();
+            this.years = daoManager.getCarsDAO().getAllYears();
+            this.fuelTypes = daoManager.getCarsDAO().getAllFuelTypes();
+        } catch (DBException e) {
+            LOGGER.error(e);
+        } finally {
+            daoManager.closeConnection();
+        }
         LocalDate today = LocalDate.now(); //set today
         this.period = new RentPeriod(LocalDate.now(), (today.plusDays(1)));
         // '-1' value means any filtering value

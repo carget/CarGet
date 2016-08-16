@@ -5,13 +5,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import ua.mishkyroff.carget.controller.*;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.CarsDAO;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.entities.Car;
 import ua.mishkyroff.carget.model.CarFilter;
 import ua.mishkyroff.carget.model.commands.Command;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class ChooseAutoCommandTest extends Mockito {
     private static IRequestWrapper wrapper;
-    private static AbstractDAOFactory daoFactory;
+    private static DAOManager daoManager;
     private static CarsDAO carsDAO;
     private static Command command;
     private static List<Car> carList;
@@ -32,16 +33,17 @@ public class ChooseAutoCommandTest extends Mockito {
     @Before
     public void setUp() throws Exception {
         wrapper = mock(RequestWrapper.class);
-        daoFactory = mock(AbstractDAOFactory.class);
+        daoManager = mock(DAOManager.class);
         carsDAO = mock(CarsDAO.class);
         command = new ChooseAutoCommand();
         carFilter = mock(CarFilter.class);
+        carList = new ArrayList<>();
     }
 
     @After
     public void tearDown() throws Exception {
         wrapper = null;
-        daoFactory = null;
+        daoManager = null;
         carList = null;
         carFilter = null;
         carsDAO = null;
@@ -49,8 +51,8 @@ public class ChooseAutoCommandTest extends Mockito {
 
     @Test
     public void execute() throws Exception {
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getCarsDAO()).thenReturn(carsDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getCarsDAO()).thenReturn(carsDAO);
         when(wrapper.getRequestAttribute(RequestAttributes.CAR_FILTER)).thenReturn(carFilter);
         when(wrapper.getParameter("brand_id")).thenReturn("-1");
         when(wrapper.getParameter("year")).thenReturn("-1");
@@ -65,7 +67,7 @@ public class ChooseAutoCommandTest extends Mockito {
 
         View page = command.execute(wrapper);
 
-        assertEquals(page, View.CHOOSE_AUTO);
+        assertEquals(View.CHOOSE_AUTO, page );
         verify(wrapper, times(0)).setSessionAttribute(any(SessionAttributes.class), anyString());
         verify(wrapper, times(1)).setRequestAttribute(RequestAttributes.CAR_FILTER, carFilter);
         verify(wrapper, times(1)).setRequestAttribute(RequestAttributes.CARS, carList);

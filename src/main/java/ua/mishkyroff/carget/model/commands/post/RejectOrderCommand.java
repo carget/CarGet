@@ -3,7 +3,7 @@ package ua.mishkyroff.carget.model.commands.post;
 import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.entities.Order;
 import ua.mishkyroff.carget.model.Messages;
 import ua.mishkyroff.carget.model.commands.Command;
@@ -32,13 +32,18 @@ public class RejectOrderCommand implements Command {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ENTER_REASON_FOR_REJECT);
             return View.ADMIN_NEW_ORDERS;
         }
-        AbstractDAOFactory daoFactory = wrapper.getDAOFactory();
-        Integer orderStatus = daoFactory.getOrdersDAO().getOrderStatusById(orderId);
-        if (orderStatus == Order.NEW) {
-            if (daoFactory.getOrdersDAO().setOrderStatusCommentById(orderId, Order.REJECTED, reason)) {
+        //todo transaction!!!
+        DAOManager daoManager = wrapper.getDAOManager();
+        Integer orderStatus = (Integer) daoManager.openExecuteAndClose(
+                manager -> manager.getOrdersDAO().getOrderStatusById(orderId));
+        if (orderStatus!=null && orderStatus == Order.NEW) {
+            boolean result = (boolean) daoManager.openExecuteAndClose(
+                    manager -> manager.getOrdersDAO().setOrderStatusCommentById(orderId, Order.REJECTED, reason));
+            if (result) {
                 return View.ADMIN_NEW_ORDERS;
             }
         }
+        //********************
         wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_REJECTING_ORDER);
         return View.ADMIN_NEW_ORDERS;
     }

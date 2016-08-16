@@ -3,6 +3,8 @@ package ua.mishkyroff.carget.listeners;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
+import ua.mishkyroff.carget.dao.Exceptions.DBException;
 import ua.mishkyroff.carget.dao.Exceptions.DBStructureError;
 
 import javax.servlet.ServletContextEvent;
@@ -27,14 +29,20 @@ public class ContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
+        AbstractDAOFactory daoFactory = AbstractDAOFactory.getDAOFactory("MySQL");
+        DAOManager daoManager = daoFactory.getDAOManager();
         try {
-            AbstractDAOFactory daoFactory = AbstractDAOFactory.getDAOFactory("MySQL");
-            daoFactory.getInitDBDAO().initAndCheckDB();
+            daoManager.openConnection();
+            daoManager.getInitDBDAO().initAndCheckDB();
             servletContextEvent.getServletContext().setAttribute("DAOFactory", daoFactory);
         } catch (SQLException e) {
-            LOGGER.error("SQL error during DB initialization " + e.getMessage());
+            LOGGER.fatal("SQL error during DB initialization " + e.getMessage());
         } catch (DBStructureError dbStructureError) {
-            LOGGER.error(dbStructureError.getMessage());
+            LOGGER.fatal(dbStructureError.getMessage());
+        } catch (DBException e) {
+            LOGGER.fatal(e.getMessage());
+        } finally {
+            daoManager.closeConnection();
         }
         LOGGER.info("DB checked!");
         LOGGER_FILE.info("DB checked!");

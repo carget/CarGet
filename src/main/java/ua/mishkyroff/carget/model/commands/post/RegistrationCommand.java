@@ -3,8 +3,7 @@ package ua.mishkyroff.carget.model.commands.post;
 import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
-import ua.mishkyroff.carget.dao.UsersDAO;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.entities.User;
 import ua.mishkyroff.carget.model.Messages;
 import ua.mishkyroff.carget.model.commands.Command;
@@ -49,9 +48,10 @@ public class RegistrationCommand implements Command {
 
         //default role for new users is USER
         User user = new User(firstName, lastName, passport, email, false, password);
-        AbstractDAOFactory daoFactory = wrapper.getDAOFactory();
-        UsersDAO usersDAO = daoFactory.getUsersDAO();
-        if (usersDAO.add(user)) {
+        DAOManager daoManager = wrapper.getDAOManager();
+        boolean result = (boolean) daoManager.openExecuteAndClose(
+                manager -> manager.getUsersDAO().add(user));
+        if (result) {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.USER_REGISTERED_SUCCESSFULLY);
         } else {
             wrapper.setSessionAttribute(SessionAttributes.MESSAGE, Messages.ERROR_USER_ALREADY_EXISTS);

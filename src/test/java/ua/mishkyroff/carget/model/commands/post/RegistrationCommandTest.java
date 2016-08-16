@@ -13,7 +13,7 @@ import ua.mishkyroff.carget.controller.IRequestWrapper;
 import ua.mishkyroff.carget.controller.RequestWrapper;
 import ua.mishkyroff.carget.controller.SessionAttributes;
 import ua.mishkyroff.carget.controller.View;
-import ua.mishkyroff.carget.dao.AbstractDAOFactory;
+import ua.mishkyroff.carget.dao.DAOManager;
 import ua.mishkyroff.carget.dao.UsersDAO;
 import ua.mishkyroff.carget.entities.User;
 import ua.mishkyroff.carget.model.Messages;
@@ -30,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 public class RegistrationCommandTest extends Mockito {
     private static IRequestWrapper wrapper;
     private static Command command;
-    private static AbstractDAOFactory daoFactory;
+    private static DAOManager daoManager;
     private static UsersDAO usersDAO;
     private static User user;
     //correct parameters
@@ -45,7 +45,7 @@ public class RegistrationCommandTest extends Mockito {
     public void setUp() throws Exception {
         wrapper = mock(RequestWrapper.class);
         command = new RegistrationCommand();
-        daoFactory = mock(AbstractDAOFactory.class);
+        daoManager = mock(DAOManager.class);
         usersDAO = mock(UsersDAO.class);
 
         when(wrapper.getParameter("firstName")).thenReturn(FIRST_NAME);
@@ -60,7 +60,7 @@ public class RegistrationCommandTest extends Mockito {
     @After
     public void tearDown() throws Exception {
         wrapper = null;
-        daoFactory = null;
+        daoManager = null;
         usersDAO = null;
         user = null;
     }
@@ -68,8 +68,8 @@ public class RegistrationCommandTest extends Mockito {
     @Test
     public void correctParams() throws Exception {
 
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getUsersDAO()).thenReturn(usersDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getUsersDAO()).thenReturn(usersDAO);
         user = new User(FIRST_NAME, LAST_NAME, PASSPORT, EMAIL, false, PASSWORD);
         when(usersDAO.add(any(User.class))).thenReturn(true);
 
@@ -97,8 +97,8 @@ public class RegistrationCommandTest extends Mockito {
 
         when(wrapper.getParameter("passport")).thenReturn(passportFormat);
 
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getUsersDAO()).thenReturn(usersDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getUsersDAO()).thenReturn(usersDAO);
         user = new User(FIRST_NAME, LAST_NAME, PASSPORT, EMAIL, false, PASSWORD);
         when(usersDAO.add(any(User.class))).thenReturn(true);
 
@@ -116,8 +116,8 @@ public class RegistrationCommandTest extends Mockito {
 
         when(wrapper.getParameter("email")).thenReturn(emailFormat);
 
-        when(wrapper.getDAOFactory()).thenReturn(daoFactory);
-        when(daoFactory.getUsersDAO()).thenReturn(usersDAO);
+        when(wrapper.getDAOManager()).thenReturn(daoManager);
+        when(daoManager.getUsersDAO()).thenReturn(usersDAO);
         user = new User(FIRST_NAME, LAST_NAME, PASSPORT, EMAIL, false, PASSWORD);
         when(usersDAO.add(any(User.class))).thenReturn(true);
 
