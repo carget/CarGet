@@ -15,7 +15,7 @@
             <td>${order.idOrder}</td>
             <td>
                 <a href="${pageContext.request.contextPath}/pages/car_info?car_id=${order.car.idCar}">
-                    <img src="${order.car.model.img}" height="128" />
+                    <img src="${order.car.model.img}" height="128"/>
                 </a>
             </td>
             <td>${order.user.firstName}</td>
@@ -24,7 +24,11 @@
             <td>${order.endDate}</td>
             <td>${order.comment}</td>
             <td>${order.rent}</td>
-            <td>${order.fine}</td>
+            <td>
+                <c:if test="${order.fine > 0 }">
+                    <p class="text-danger">${order.fine}</p>
+                </c:if>
+            </td>
             <td><fmt:message key="${order.statusStr}" bundle="${lang}"/></td>
             <td>
                 <c:if test="${order.statusStr eq 'APPROVED'}">
@@ -35,6 +39,15 @@
                         <input type="hidden" name="order_id" value="${order.idOrder}"/>
                         <button type="submit" class="btn btn-primary">
                             <fmt:message key="PAY" bundle="${lang}"/></button>
+                    </form>
+                </c:if>
+                <c:if test="${order.fine > 0}">
+                    <%--SHOW FINE INVOICE BUTTON--%>
+                    <form action="${pageContext.request.contextPath}/pages/user_invoice"
+                          method="get">
+                        <input type="hidden" name="order_id" value="${order.idOrder}"/>
+                        <button type="submit" class="btn btn-primary">
+                            <fmt:message key="SHOW_INVOICE" bundle="${lang}"/></button>
                     </form>
                 </c:if>
             </td>

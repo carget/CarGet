@@ -35,7 +35,7 @@
     <div class="row">
         <div class="form-group col-xs-4">
             <label for="password"><fmt:message key="PASSWORD" bundle="${lang}"/></label>
-            <input type="text" name="password" class="form-control" id="password" required
+            <input type="password" name="password" class="form-control" id="password" required
                    placeholder="<fmt:message key="PASSWORD" bundle="${lang}"/>">
         </div>
     </div>
@@ -43,7 +43,7 @@
         <div class="form-group col-xs-4">
             <label for="password_repeat"><fmt:message key="REPEAT_PASSWORD"
                                                       bundle="${lang}"/></label>
-            <input type="text" name="password_repeat" class="form-control" id="password_repeat"
+            <input type="password" name="password_repeat" class="form-control" id="password_repeat"
                    required
                    placeholder="<fmt:message key="REPEAT_PASSWORD" bundle="${lang}"/>">
         </div>

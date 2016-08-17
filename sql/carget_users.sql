@@ -1,0 +1,4 @@
+INSERT INTO carget.users (first_name, last_name, password, passport, email, is_admin) VALUES ('Admin', 'Adminov', 'admin', 'CD123456', 'admin@mail.com', 1);
+INSERT INTO carget.users (first_name, last_name, password, passport, email, is_admin) VALUES ('User1', 'Userov1', 'user1', 'UU000001', 'user1@mail.com', 0);
+INSERT INTO carget.users (first_name, last_name, password, passport, email, is_admin) VALUES ('User2', 'Userov2', 'user2', 'UU000002', 'user2@mail.com', 0);
+INSERT INTO carget.users (first_name, last_name, password, passport, email, is_admin) VALUES ('User3', 'Userov3', 'user3', 'UU000003', 'user3@mail.com', 0);

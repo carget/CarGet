@@ -9,6 +9,8 @@ public class Messages {
     private Messages() {}
 
     public static final String USER_REGISTERED_SUCCESSFULLY             = "USER_REGISTERED_SUCCESSFULLY";
+    public static final String ERROR_YOU_CAN_VIEW_ONLY_YOUR_INVOICES    = "YOU_CAN_VIEW_ONLY_YOUR_INVOICES";
+    public static final String ERROR_GETTING_ORDER                      = "ERROR_GETTING_ORDER_INFO";
     public static final String ORDER_ADDED_SUCCESSFULLY                 = "ORDER_ADDED_SUCCESSFULLY";
     public static final String FIRSTLY_CHOOSE_ORDER                     = "CHOOSE_ORDER_TO_COMPLETE";
     public static final String FIRSTLY_CHOOSE_AUTO                      = "FIRSTLY_CHOOSE_AUTO";

@@ -13,6 +13,7 @@ public enum View {
     CHOOSE_AUTO("/WEB-INF/jsp/choose_auto.jsp"),
     USER_PREPARE_ORDER("/WEB-INF/jsp/prepare_order.jsp"),
     USER_MY_ORDERS("/WEB-INF/jsp/my_orders.jsp"),
+    USER_INVOICE("/WEB-INF/jsp/invoice_fine.jsp"),
     CAR_INFO("/WEB-INF/jsp/car_info.jsp"),
     LOGIN("/WEB-INF/jsp/login.jsp"),
     REGISTRATION("/WEB-INF/jsp/registration.jsp"),

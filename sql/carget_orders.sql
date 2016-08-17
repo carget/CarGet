@@ -1,0 +1,13 @@
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (25, 1, '2016-08-13', '2016-08-14', 'просьба клиента', 200.00, 0.00, 3);
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (25, 7, '2016-08-13', '2016-08-16', 'все отлично', 750.00, 0.00, 4);
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (25, 10, '2016-08-14', '2016-08-16', 'царапина', 860.00, 1000.00, 4);
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (26, 21, '2016-08-14', '2016-09-15', 'по требованию', 25920.00, 0.00, 3);
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (25, 13, '2016-08-16', '2016-08-19', '', 1950.00, 0.00, 6);
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (25, 6, '2016-08-16', '2016-08-21', '', 1150.00, 0.00, 3);
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (25, 2, '2016-08-17', '2016-08-18', '', 400.00, 0.00, 1);
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (26, 13, '2016-08-17', '2016-08-20', 'не оплатил в срок', 1950.00, 0.00, 5);
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (26, 31, '2016-08-17', '2016-08-28', '', 16500.00, 0.00, 1);
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (25, 10, '2016-08-17', '2016-09-18', '', 13760.00, 0.00, 1);
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (27, 21, '2016-08-17', '2016-08-23', 'бампер', 4860.00, 1500.00, 4);
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (27, 22, '2016-08-17', '2016-08-21', 'все хорошо', 3400.00, 0.00, 4);
+INSERT INTO carget.orders (user_id, car_id, date_start, date_end, comment, rent, fine, status) VALUES (27, 6, '2016-08-17', '2016-08-25', '', 1840.00, 0.00, 6);
