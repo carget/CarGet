@@ -4,7 +4,7 @@ import ua.mishkyroff.carget.entities.User;
 import ua.mishkyroff.carget.entities.UserRole;
 
 /**
- * //TODO add comments
+ * Interface for all common operation with user table in the database
  *
  * @author Anton Mishkyroff
  */

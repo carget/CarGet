@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * //TODO add comments
+ * Interface for all common operation with car table in the database
  *
  * @author Anton Mishkyroff
  */

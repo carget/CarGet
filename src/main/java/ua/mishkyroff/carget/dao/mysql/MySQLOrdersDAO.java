@@ -132,6 +132,7 @@ public class MySQLOrdersDAO implements OrdersDAO {
         return order;
     }
 
+
     @Override
     public boolean setOrderStatusById(Integer orderId, int status) {
         try (PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("SET_ORDER_STATUS_BY_ID"))) {
@@ -139,7 +140,7 @@ public class MySQLOrdersDAO implements OrdersDAO {
             statement.setInt(2, orderId);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            LOGGER.error("Error by updating order by id");
+            LOGGER.error("Error by updating order by id " + e);
             return false;
         }
     }
@@ -153,7 +154,7 @@ public class MySQLOrdersDAO implements OrdersDAO {
             statement.setInt(3, orderId);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            LOGGER.error("Error by updating order by id");
+            LOGGER.error("Error by updating order by id" + e);
             return false;
         }
     }
@@ -177,8 +178,7 @@ public class MySQLOrdersDAO implements OrdersDAO {
 
     @Override
     public Order getOrderById(Integer orderId) {
-        try (Connection connection = this.connection;
-             PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("GET_ORDER_BY_ID"))) {
+        try (PreparedStatement statement = connection.prepareStatement(BUNDLE.getString("GET_ORDER_BY_ID"))) {
 
             statement.setInt(1, orderId);
             ResultSet rs = statement.executeQuery();

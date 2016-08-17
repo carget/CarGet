@@ -51,7 +51,6 @@ public class SecurityFilter implements Filter {
 
         UserRole userRole = (UserRole) hs.getAttribute(SessionAttributes.USER_ROLE.toString());
 
-        //TODO goto 404 if not allowed pathInfo()????
         String pathInfo = request.getPathInfo();
         if (pathInfo != null) {
             if (userRole != UserRole.ADMIN && pathInfo.startsWith("/admin")) {

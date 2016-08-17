@@ -5,7 +5,7 @@ import ua.mishkyroff.carget.dao.Exceptions.DBStructureError;
 import java.sql.SQLException;
 
 /**
- * //TODO add comments
+ * Interface for checking database structure (required tables)
  *
  * @author Anton Mishkyroff
  */

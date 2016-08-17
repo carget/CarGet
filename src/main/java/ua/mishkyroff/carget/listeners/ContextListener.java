@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.dao.AbstractDAOFactory;
 import ua.mishkyroff.carget.dao.DAOManager;
-import ua.mishkyroff.carget.dao.Exceptions.DBException;
+import ua.mishkyroff.carget.dao.Exceptions.DAOManagerException;
 import ua.mishkyroff.carget.dao.Exceptions.DBStructureError;
 
 import javax.servlet.ServletContextEvent;
@@ -39,7 +39,7 @@ public class ContextListener implements ServletContextListener {
             LOGGER.fatal("SQL error during DB initialization " + e.getMessage());
         } catch (DBStructureError dbStructureError) {
             LOGGER.fatal(dbStructureError.getMessage());
-        } catch (DBException e) {
+        } catch (DAOManagerException e) {
             LOGGER.fatal(e.getMessage());
         } finally {
             daoManager.closeConnection();

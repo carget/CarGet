@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeTrue;
 
 /**
- * //TODO add comments
+ * Test class for RentPeriod.class
  *
  * @author Anton Mishkyroff
  */

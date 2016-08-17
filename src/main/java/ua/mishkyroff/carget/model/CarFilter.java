@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.mishkyroff.carget.dao.CarsDAO;
 import ua.mishkyroff.carget.dao.DAOManager;
-import ua.mishkyroff.carget.dao.Exceptions.DBException;
+import ua.mishkyroff.carget.dao.Exceptions.DAOManagerException;
 import ua.mishkyroff.carget.entities.Brand;
 import ua.mishkyroff.carget.entities.Car;
 
@@ -46,7 +46,7 @@ public class CarFilter {
             this.brands = daoManager.getBrandsDAO().getAllBrands();
             this.years = daoManager.getCarsDAO().getAllYears();
             this.fuelTypes = daoManager.getCarsDAO().getAllFuelTypes();
-        } catch (DBException e) {
+        } catch (DAOManagerException e) {
             LOGGER.error(e);
         } finally {
             daoManager.closeConnection();

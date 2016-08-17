@@ -3,7 +3,8 @@ package ua.mishkyroff.carget.dao;
 import ua.mishkyroff.carget.dao.mysql.MySQLDAOFactory;
 
 /**
- * //TODO add comments
+ * Factory creates concrete DAOFactory
+ * Also provides interface for DAOManager object creation
  *
  * @author Anton Mishkyroff
  */

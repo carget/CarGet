@@ -7,7 +7,7 @@ package ua.mishkyroff.carget.controller;
  * @author Anton Mishkyroff
  */
 public enum RequestAttributes {
-    MESSAGE("error"), //TODO remove from session
+    MESSAGE("error"),
     CAR("car"),
     CAR_FILTER("car_filter"),
     CARS("cars"),

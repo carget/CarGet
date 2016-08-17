@@ -12,6 +12,6 @@
     <title>Title</title>
 </head>
 <body>
-<c:redirect url="/error_404.jsp"/>
+<c:redirect url="/WEB-INF/jsp/error_404.jsp"/>
 </body>
 </html>

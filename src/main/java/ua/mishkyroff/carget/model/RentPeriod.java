@@ -1,6 +1,6 @@
 package ua.mishkyroff.carget.model;
 
-import ua.mishkyroff.carget.model.commands.post.ProcessOrderCommand;
+import ua.mishkyroff.carget.model.commands.nonidempotent.ProcessOrderCommand;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

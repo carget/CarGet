@@ -5,7 +5,7 @@ import ua.mishkyroff.carget.entities.Brand;
 import java.util.List;
 
 /**
- * //TODO add comments
+ * Interface for general operation with brands table.
  *
  * @author Anton Mishkyroff
  */

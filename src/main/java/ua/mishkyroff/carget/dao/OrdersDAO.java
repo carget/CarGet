@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * //TODO add comments
+ * Interface for all common operation with orders table in the database
  *
  * @author Anton Mishkyroff
  */
@@ -17,6 +17,13 @@ public interface OrdersDAO {
 
     List<Order> getAllOrdersByStatus(int status);
 
+    /**
+     * Sets new order status by order id
+     *
+     * @param orderId - order id
+     * @param status - new order status
+     * @return true if order status updated
+     */
     boolean setOrderStatusById(Integer orderId, int status);
 
     boolean setOrderStatusCommentById(Integer orderId, int status, String comment);

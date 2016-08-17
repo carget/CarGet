@@ -18,7 +18,6 @@ public class SessionListener implements HttpSessionListener {
     @Override
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
         //generate CSRF token
-        //TODO improve generator
         Long token = (long) (Math.random() * Long.MAX_VALUE);
         httpSessionEvent.getSession().setAttribute("csrfToken", token);
         LOGGER_CONSOLE.info("Session created and CSRF Token has been generated = " + token);
